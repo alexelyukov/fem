@@ -1,0 +1,51 @@
+<div class="container-fluid">    
+    <div class="row">
+        <div class="col-9">
+            <thermal-field-tube-pixi (notify)="onNotify($event)"></thermal-field-tube-pixi>
+        </div>
+        <div class="col-3 mt-5">
+            <div class="form-check">
+                <input
+                    [disabled]="isActiveTriangulationBtn"
+                    [(ngModel)]="showTriangulation"
+                    type="checkbox"
+                    class="form-check-input"
+                    (change)="change()">
+                <label class="form-check-label">Показать триангуляцию</label>
+            </div>
+            <div class="form-check">
+                <input
+                    [disabled]="isActiveTriangulationBtn"
+                    [(ngModel)]="showVoronoi"
+                    type="checkbox"
+                    class="form-check-input"
+                    (change)="change()">
+                <label class="form-check-label">Показать диаграмму Вороного</label>
+            </div>
+            <button
+                [disabled]="!isActiveTriangulationBtn"
+                type="button"
+                class="btn btn-primary btn-block mt-3"
+                (click)="getTriangulation()"
+            >
+                <span *ngIf="isTriangulationWaiting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Триангуляция
+            </button>
+            <button
+                [disabled]="!isActiveSolveBtn"
+                type="button"
+                class="btn btn-primary btn-block"
+                (click)="solve()"
+            >
+                <span *ngIf="isSolveWaiting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Решение
+            </button>
+            <button
+                [disabled]="!isActiveClearBtn"
+                type="button"
+                class="btn btn-primary btn-block"
+                (click)="clear()"
+            >Очистить</button>
+        </div>
+    </div>
+</div>

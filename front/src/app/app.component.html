@@ -1,0 +1,21 @@
+<div class="container-fluid mt-3">
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="/">FEM project</a>
+    </nav>
+    <div class="row">
+        <div class="col-3 mt-5">
+            <nav class="nav flex-column">
+                <a class="nav-link" href="/thermal-field-rectangle">Тепловое поле пластины</a>
+                <a class="nav-link" href="/thermal-field-tube">Тепловое поле трубы</a>
+                <a class="nav-link" href="/electrostatic-field-skin">Электростатическое поле скин-эффекта</a>
+                <a class="nav-link" href="/electrostatic-field-cord">Электростатическое поле трехфазного проводника</a>
+                <a class="nav-link" href="/electromagnetic-field-magnet">Электромагнитное поле магнита</a>
+                <a class="nav-link" href="/electromagnetic-field-transformer">Электромагнитное поле трансформатора</a>
+                <a class="nav-link" href="/electrodynamic-system">Электродинамическая система</a>
+            </nav>
+        </div>
+        <div class="col-9">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

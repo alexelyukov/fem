@@ -27,6 +27,9 @@ library:
   dependencies:
   - Rasterific
   - JuicyPixels
+  - aeson
+  - random
+  - happstack-server
 
 executables:
   fem-exe:
@@ -40,6 +43,9 @@ executables:
     - fem
     - Rasterific
     - JuicyPixels
+    - aeson
+    - random
+    - happstack-server
 
 tests:
   fem-test:
@@ -51,3 +57,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - fem
+    - Rasterific
+    - JuicyPixels
+    - hspec
+    - QuickCheck

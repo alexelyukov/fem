@@ -25,7 +25,18 @@ source-repository head
 
 library
   exposed-modules:
-      Drawer
+      Config
+      Controllers.ElectrodynamicSystemController
+      Controllers.ElectromagneticFieldMagnetController
+      Controllers.ElectromagneticFieldTransformerController
+      Controllers.ElectrostaticFieldCordController
+      Controllers.ElectrostaticFieldSkinController
+      Controllers.ThermalFieldRectangleController
+      Controllers.ThermalFieldTubeController
+      Delaunay
+      Generator
+      Geometry
+      Types
   other-modules:
       Paths_fem
   hs-source-dirs:
@@ -33,7 +44,10 @@ library
   build-depends:
       JuicyPixels
     , Rasterific
+    , aeson
     , base >=4.7 && <5
+    , happstack-server
+    , random
   default-language: Haskell2010
 
 executable fem-exe
@@ -46,19 +60,28 @@ executable fem-exe
   build-depends:
       JuicyPixels
     , Rasterific
+    , aeson
     , base >=4.7 && <5
     , fem
+    , happstack-server
+    , random
   default-language: Haskell2010
 
 test-suite fem-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      DelaunaySpec
+      DrawerSpec
       Paths_fem
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      JuicyPixels
+    , QuickCheck
+    , Rasterific
+    , base >=4.7 && <5
     , fem
+    , hspec
   default-language: Haskell2010
