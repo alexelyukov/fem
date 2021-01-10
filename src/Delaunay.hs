@@ -30,13 +30,13 @@ addNode ts node =
     [t] ->
       let neighbors = searchAllNeighbors t ts
           Triangle (node1, node2, node3) = t
-          newTriangles = [Triangle (node1, node2, node), Triangle (node1, node, node3), Triangle (node, node2, node3)] ++ ts
-          cleanTriangles = filter ( /= t) newTriangles
+          newTriangles = [Triangle (node1, node2, node), Triangle (node1, node, node3), Triangle (node, node2, node3)]
+          cleanTriangles = filter ( /= t) (newTriangles ++ ts)
       in cleanTriangles;
     [tA, tB] ->
       let neighbors = nub $ searchAllNeighbors tA ts ++ searchAllNeighbors tB ts
           (edgeNodes, differentNodes) = separateNodes tA tB
-          newTriangles = [Triangle (node, a, b) | a <- edgeNodes, b <- differentNodes] ++ ts
-          cleanTriangles = filter (`notElem` [tA, tB]) newTriangles
+          newTriangles = [Triangle (node, a, b) | a <- edgeNodes, b <- differentNodes]
+          cleanTriangles = filter (`notElem` [tA, tB]) (newTriangles ++ ts)
       in cleanTriangles;
   }

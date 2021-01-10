@@ -5,6 +5,7 @@ module Triangle (
   isNeighbors,
   searchAllNeighbors,
   separateNodes,
+  rebuildNeighbors,
   Triangle(..),
   PointPosition(..),
 ) where
@@ -59,3 +60,8 @@ separateNodes (Triangle (nodeA1, nodeA2, nodeA3)) (Triangle (nodeB1, nodeB2, nod
       differentNodes1 = filter (`notElem` edgeNodes) [nodeA1, nodeA2, nodeA3]
       differentNodes2 = filter (`notElem` edgeNodes) [nodeB1, nodeB2, nodeB3]
   in (edgeNodes, differentNodes1 ++ differentNodes2)
+
+rebuildNeighbors :: (Triangle, Triangle) -> (Triangle, Triangle)
+rebuildNeighbors (Triangle (nodeA1, nodeA2, nodeA3), Triangle (nodeB1, nodeB2, nodeB3)) =
+  let ([edgeNode1, edgeNode2], [differentNode1, differentNode2]) = separateNodes (Triangle (nodeA1, nodeA2, nodeA3)) (Triangle (nodeB1, nodeB2, nodeB3))
+  in (Triangle (differentNode1, differentNode2, edgeNode1), Triangle (differentNode1, differentNode2, edgeNode2))
