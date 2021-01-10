@@ -4,15 +4,19 @@ import Codec.Picture(writePng, PixelRGBA8( .. ))
 import Drawer
 import Graphics.Rasterific
 import Node
+import Triangle
+import Delaunay
 
 main :: IO ()
 main = do
   let initialPoints = generatePoints
-      firstTriangle = (V2 1000 (-500), V2 (-500) 1700, V2 2500 1700)
+      firstTriangle = [Triangle (Node 1000 (-500), Node (-500) 1700, Node 2500 1700)]
+      triangulation = Delaunay.run firstTriangle initialPoints
+  -- print $ show triangulation
   writePng "image.png" . drawBackground $ do
     drawGeometry
     drawInitialPoints . fromNodes $ initialPoints
-    drawTriangle firstTriangle 1 (PixelRGBA8 0x00 0x00 0x00 255) Solid
+    drawTriangles (fromTriangles triangulation) 1 (PixelRGBA8 0x00 0x00 0x00 255) Solid
     
 
 drawGeometry :: Drawing PixelRGBA8 ()

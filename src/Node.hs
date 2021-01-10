@@ -8,7 +8,7 @@ module Node (
 
 import Graphics.Rasterific
 
-data Node = Node Float Float
+data Node = Node Float Float deriving (Eq, Show)
 
 toNodes :: [V2 Float] -> [Node]
 toNodes = map toNode
