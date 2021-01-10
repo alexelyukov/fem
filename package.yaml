@@ -51,3 +51,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - fem
+    - Rasterific
+    - JuicyPixels
+    - hspec
+    - QuickCheck
