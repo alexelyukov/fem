@@ -9,8 +9,8 @@ import Graphics.Rasterific
 
 spec :: Spec
 spec =
-  describe "getCircleAroundTriangle" $ do
-  it "(Point2d 0 0) (Point2d 0 4) (Point2d 4 0) -> True" $
+  describe "проверка функций отрисовки" $ do
+  it "проверка функций отрисовки" $
     writePng "image.png" . drawBackground $ testDrawer
 
 testDrawer :: Drawing PixelRGBA8 ()

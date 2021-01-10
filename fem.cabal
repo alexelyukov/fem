@@ -25,7 +25,10 @@ source-repository head
 
 library
   exposed-modules:
+      Delaunay
       Drawer
+      Node
+      Triangle
   other-modules:
       Paths_fem
   hs-source-dirs:
@@ -54,7 +57,9 @@ test-suite fem-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      DelaunaySpec
       DrawerSpec
+      TriangleSpec
       Paths_fem
   hs-source-dirs:
       test
