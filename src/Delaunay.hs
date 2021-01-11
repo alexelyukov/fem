@@ -28,15 +28,13 @@ addNode ts node =
   case filter (\t -> whereIsPoint node t `elem` [In, OnEdge]) ts of {
     [] -> ts;
     [t] ->
-      let neighbors = searchAllNeighbors t ts
-          Triangle (node1, node2, node3) = t
+      let Triangle (node1, node2, node3) = t
           newTriangles = [Triangle (node1, node2, node), Triangle (node1, node, node3), Triangle (node, node2, node3)]
-          cleanTriangles = filter ( /= t) (newTriangles ++ ts)
-      in cleanTriangles;
+          cleanTriangles = filter ( /= t) ts
+      in newTriangles ++ cleanTriangles;
     [tA, tB] ->
-      let neighbors = nub $ searchAllNeighbors tA ts ++ searchAllNeighbors tB ts
-          (edgeNodes, differentNodes) = separateNodes tA tB
+      let (edgeNodes, differentNodes) = separateNodes tA tB
           newTriangles = [Triangle (node, a, b) | a <- edgeNodes, b <- differentNodes]
-          cleanTriangles = filter (`notElem` [tA, tB]) (newTriangles ++ ts)
-      in cleanTriangles;
+          cleanTriangles = filter (`notElem` [tA, tB]) ts
+      in newTriangles ++ cleanTriangles;
   }

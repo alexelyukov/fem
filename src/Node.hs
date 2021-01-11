@@ -4,6 +4,7 @@ module Node (
   toNode,
   fromNodes,
   fromNode,
+  distance,
 ) where
 
 import Graphics.Rasterific
@@ -21,3 +22,6 @@ fromNodes = map fromNode
 
 fromNode :: Node -> V2 Float
 fromNode (Node x y) = V2 x y
+
+distance :: Node -> Node -> Float
+distance (Node x1 y1) (Node x2 y2) = sqrt ((x2 - x1) ^ 2 + (y2 - y1) ^ 2)

@@ -9,7 +9,7 @@ import Delaunay
 
 main :: IO ()
 main = do
-  let initialPoints = generatePoints
+  let initialPoints = take 10 generatePoints
       [n1, n2, n3] = [Node 1000 (-500), Node (-500) 1700, Node 2500 1700]
       firstTriangle = [Triangle (n1, n2, n3)]
       triangulation = Delaunay.run firstTriangle initialPoints
@@ -18,7 +18,7 @@ main = do
   writePng "image.png" . drawBackground $ do
     drawGeometry
     drawInitialPoints . fromNodes $ initialPoints
-    drawTriangles (fromTriangles triangulationWithoutSuper) 1 (PixelRGBA8 0x00 0x00 0x00 255) Solid
+    drawTriangles (fromTriangles triangulation) 1 (PixelRGBA8 0x00 0x00 0x00 255) Solid
     
 
 drawGeometry :: Drawing PixelRGBA8 ()
