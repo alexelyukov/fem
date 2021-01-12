@@ -13,7 +13,7 @@ main :: IO ()
 main = do
   let generator = mkStdGen 10
       geometry = getGeometry
-      generatedPoints = take 1000 $ generatePoints generator geometry []
+      generatedPoints = take 600 $ generatePoints generator geometry []
 
       triangulation0 = Delaunay.run [getSuperTriangle] (geometry2nodes geometry)
       triangulation1 = filter (\t -> isInGeometry (getMedian t) geometry) triangulation0

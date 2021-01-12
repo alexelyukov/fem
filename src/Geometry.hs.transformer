@@ -23,11 +23,19 @@ type Geometry = [Figure]
 -- !!! callback
 getGeometry :: Geometry
 getGeometry =
-  let nodes1 = [Node (1000 + 500 * cos(2 * pi * i / 200)) (1000 + 500 * sin(2 * pi * i / 200)) | i <- [1..200]]
-      nodes2 = [Node (1000 + 0.5*500*cos(pi/2) + 130 * cos(2 * pi * i / 40)) (1000 - 0.5*500*sin(pi/2) + 130 * sin(2 * pi * i / 40)) | i <- [1..40]]
-      nodes3 = [Node (1000 - 0.5*500*cos(pi/6) + 130 * cos(2 * pi * i / 40)) (1000 + 0.5*500*sin(pi/6) + 130 * sin(2 * pi * i / 40)) | i <- [1..40]]
-      nodes4 = [Node (1000 + 0.5*500*cos(pi/6) + 130 * cos(2 * pi * i / 40)) (1000 + 0.5*500*sin(pi/6) + 130 * sin(2 * pi * i / 40)) | i <- [1..40]]
-  in [Figure nodes1 True, Figure nodes2 False, Figure nodes3 False, Figure nodes4 False]
+  let nodes1 = [Node (spreadPoints 500 1500 i 50) 500 | i <- [0..50]]
+        ++ [Node 1500 (spreadPoints 500 1500 i 50) | i <- [1..49]]
+        ++ [Node (spreadPoints 1500 500 i 50) 1500 | i <- [0..50]]
+        ++ [Node 500 (spreadPoints 1500 500 i 50) | i <- [1..49]]
+      nodes2 = [Node (spreadPoints 700 900 i 10) 700 | i <- [0..10]]
+        ++ [Node 900 (spreadPoints 700 1300 i 30) | i <- [1..29]]
+        ++ [Node (spreadPoints 900 700 i 10) 1300 | i <- [0..10]]
+        ++ [Node 700 (spreadPoints 1300 700 i 30) | i <- [1..29]]
+      nodes3 = [Node (spreadPoints 1100 1300 i 10) 700 | i <- [0..10]]
+        ++ [Node 1300 (spreadPoints 700 1300 i 30) | i <- [1..29]]
+        ++ [Node (spreadPoints 1300 1100 i 10) 1300 | i <- [0..10]]
+        ++ [Node 1100 (spreadPoints 1300 700 i 30) | i <- [1..29]]
+  in [Figure nodes1 True, Figure nodes2 False, Figure nodes3 False]
 
 -- !!! callback
 getSuperTriangle :: Triangle
@@ -39,11 +47,10 @@ getBorders = (Node 500 500, Node 1500 1500)
 
 -- !!! callback
 drawGeometry :: Geometry -> Drawing PixelRGBA8 ()
-drawGeometry [figure1, figure2, figure3, figure4] = do
+drawGeometry [figure1, figure2, figure3] = do
   drawFigure figure1 5 (PixelRGBA8 0x00 0x00 0x00 255) (PixelRGBA8 0xDD 0xDD 0xDD 255) Solid
   drawFigure figure2 5 (PixelRGBA8 0x00 0x00 0x00 255) (PixelRGBA8 0xFF 0xFF 0xFF 255) Solid
   drawFigure figure3 5 (PixelRGBA8 0x00 0x00 0x00 255) (PixelRGBA8 0xFF 0xFF 0xFF 255) Solid
-  drawFigure figure4 5 (PixelRGBA8 0x00 0x00 0x00 255) (PixelRGBA8 0xFF 0xFF 0xFF 255) Solid
 
 geometry2nodes :: Geometry -> [Node]
 geometry2nodes [] = []
