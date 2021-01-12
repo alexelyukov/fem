@@ -34,3 +34,26 @@ spec =
   it "сортировка точек 2" $ step2 (Node 0 0) [
       Node 0 3, Node 0 2, Node 1 (-1), Node 1 1, Node 0 (-4), Node 0 (-1)
     ] `shouldBe` [Node 0 (-4), Node 0 (-1), Node 1 (-1), Node 1 1, Node 0 3, Node 0 2]
+  it "отделение точек, лежащих на одной прямой для начальной точки" $ splitNodes (Node 0 0) ([],
+    [
+      Node 2 (-2), Node 3 (-3), Node 1 (-1), Node 2 0, Node 2 1, Node 3 3, Node 2 2, Node 1 1
+    ]) `shouldBe` ([
+      Node 1 (-1), Node 2 (-2), Node 3 (-3)
+    ], [
+      Node 2 0, Node 2 1, Node 3 3, Node 2 2, Node 1 1
+    ])
+  it "нахождение точки с минимальной абциссой для алгоритма" $
+    step1 getRealNodes `shouldBe` Node 0 (-2)
+  it "алгоритм" $ grahamScan getRealNodes `shouldBe` [
+      Node 0 (-2), Node 0 (-3), Node 3 (-4), Node 6 (-3), Node 5 0, Node 4 2, Node 3 3, Node 2 2, Node 1 1, Node 0 0, Node 0 (-1)
+    ]
+
+  it "нахождение точки с минимальной абциссой для алгоритма" $
+    grahamScan [] `shouldBe` Node 0 (-2)
+
+getRealNodes :: [Node]
+getRealNodes = [
+    Node 0 (-2), Node 0 (-3), Node 0 (-1), Node 0 0, Node 1 1, Node 2 2,
+    Node 3 3, Node 1 (-2), Node 2 (-1), Node 3 (-2), Node 3 (-4), Node 4 (-3),
+    Node 6 (-3), Node 5 0, Node 4 2, Node 3 1, Node 2 0
+  ]

@@ -61,7 +61,6 @@ test-suite fem-test
       DelaunaySpec
       DrawerSpec
       GrahamSpec
-      TriangleSpec
       Paths_fem
   hs-source-dirs:
       test
