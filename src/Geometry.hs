@@ -23,15 +23,15 @@ type Geometry = [Figure]
 -- !!! callback
 getGeometry :: Geometry
 getGeometry =
-  let n = 10
+  let n = 24
       alpha = 2*pi/n
       beta = alpha*0.7
       gamma = alpha-beta
       r1 = 500
-      r2 = 100
-      innerRound = [Node (1000+r2*cos(gamma*i/20)) (1000+r2*sin(gamma*i/20)) | i <- [1..19]]
-      outerRound = [Node (1000+r1*cos(beta*i/20)) (1000+r1*sin(beta*i/20)) | i <- [1..19]]
-      border1 = [Node (1000+r2+(r1-r2)*i/20) 1000 | i <- [0..20]]
+      r2 = 250
+      innerRound = [Node (1000+r2*cos(gamma*i/3)) (1000+r2*sin(gamma*i/3)) | i <- [1..2]]
+      outerRound = [Node (1000+r1*cos(beta*i/10)) (1000+r1*sin(beta*i/10)) | i <- [1..9]]
+      border1 = [Node (1000+r2+(r1-r2)*i/15) 1000 | i <- [0..15]]
       border2 = reverse border1
 
       step = map (rotate (-beta)) border1
@@ -39,8 +39,9 @@ getGeometry =
         ++ border2
         ++ innerRound
 
-      nodes1 = foldl (\acc value -> map (rotate value) step ++ acc) step [alpha*i | i <- [1..n-1]]
-  in [Figure step True]
+      nodes1 = foldl (\acc value -> acc ++ map (rotate value) step) step [alpha*i | i <- [1..n-1]]
+      nodes2 = [Node (1000 + 150 * cos(2 * pi * i / 30)) (1000 + 150 * sin(2 * pi * i / 30)) | i <- [1..30]]
+  in [Figure nodes1 True, Figure nodes2 False]
 
 -- !!! callback
 getSuperTriangle :: Triangle
@@ -52,8 +53,9 @@ getBorders = (Node 500 500, Node 1500 1500)
 
 -- !!! callback
 drawGeometry :: Geometry -> Drawing PixelRGBA8 ()
-drawGeometry [figure1] = do
+drawGeometry [figure1, figure2] = do
   drawFigure figure1 5 (PixelRGBA8 0x00 0x00 0x00 255) (PixelRGBA8 0xDD 0xDD 0xDD 255) Solid
+  drawFigure figure2 5 (PixelRGBA8 0x00 0x00 0x00 255) (PixelRGBA8 0xFF 0xFF 0xFF 255) Solid
 
 geometry2nodes :: Geometry -> [Node]
 geometry2nodes [] = []
@@ -72,7 +74,9 @@ rotate :: Float -> Node -> Node
 rotate fi (Node x y) =
   let sinA = sin fi
       cosA = cos fi
-  in Node (x*cosA-y*sinA) (x*sinA+y*cosA)
+      x1 = x - 1000
+      y1 = y - 1000
+  in Node (1000 + x1*cosA-y1*sinA) (1000 + x1*sinA+y1*cosA)
 
 inFigure :: Node -> Figure -> Bool
 inFigure n0 (Figure n@(n1:_) inout) =
