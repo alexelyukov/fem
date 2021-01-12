@@ -3,11 +3,9 @@ module Delaunay (
   run,
 ) where
 
-import Graphics.Rasterific
 import Triangle
-import Graham
 import Node
-import Data.List (nub)
+import Data.List
 
 check :: Node -> Triangle -> Bool
 check (Node x0 y0) (Triangle (Node x1 y1, Node x2 y2, Node x3 y3)) =
@@ -24,10 +22,13 @@ check (Node x0 y0) (Triangle (Node x1 y1, Node x2 y2, Node x3 y3)) =
 run :: [Triangle] -> [Node] -> [Triangle]
 run = foldl addNode
 
+-- private
+
 addNode :: [Triangle] -> Node -> [Triangle]
 addNode ts node =
-  let badTriangles = getAllBadTriangles node ts
+  let badTriangles = getBadTriangles node ts
       badNodes = nub $ triangles2Nodes badTriangles
       cleanTriangles = filter (`notElem` badTriangles) ts
-      poligon@(h:_) = grahamScan badNodes
-  in nodes2Triangles node (poligon ++ [h]) ++ cleanTriangles
+      poligon@(h:_) = polarAngleSort node badNodes
+      newTriangles = nodes2Triangles node (poligon ++ [h])
+  in newTriangles ++ cleanTriangles

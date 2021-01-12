@@ -27,6 +27,7 @@ library:
   dependencies:
   - Rasterific
   - JuicyPixels
+  - random
 
 executables:
   fem-exe:
@@ -40,6 +41,7 @@ executables:
     - fem
     - Rasterific
     - JuicyPixels
+    - random
 
 tests:
   fem-test:

@@ -1,6 +1,9 @@
 module Drawer (
   LineType(..),
+  Size,
   drawBackground,
+
+  drawTriangulation,
 
   fillPolygons,
   fillPolygon,
@@ -29,7 +32,9 @@ module Drawer (
 
 import Graphics.Rasterific
 import Graphics.Rasterific.Texture
-import Codec.Picture(PixelRGBA8( .. ), Image)
+import Codec.Picture
+import Triangle
+import Node
 
 type Size = Float
 type Radius = Float
@@ -42,6 +47,14 @@ drawBackground =
       width           = 2000
       height          = 2000
   in renderDrawing width height backgroundColor . withTexture (uniformTexture drawColor)
+
+drawTriangulation :: [Triangle] -> Size -> Size -> PixelRGBA8 -> PixelRGBA8 -> LineType -> Drawing PixelRGBA8 ()
+drawTriangulation triangulation sizeBorder sizeNodes colorBorder colorNodes linetype =
+  let t = fromTriangles triangulation
+      points = triangles2Nodes triangulation
+  in do
+    drawTriangles t sizeBorder colorBorder linetype
+    drawPoints (fromNodes points) sizeNodes colorNodes
 
 fillPolygons :: [[V2 Float]] -> PixelRGBA8 -> Drawing PixelRGBA8 ()
 fillPolygons = mconcat . map fillPolygon

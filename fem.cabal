@@ -27,7 +27,8 @@ library
   exposed-modules:
       Delaunay
       Drawer
-      Graham
+      Generator
+      Geometry
       Node
       Triangle
   other-modules:
@@ -38,6 +39,7 @@ library
       JuicyPixels
     , Rasterific
     , base >=4.7 && <5
+    , random
   default-language: Haskell2010
 
 executable fem-exe
@@ -52,6 +54,7 @@ executable fem-exe
     , Rasterific
     , base >=4.7 && <5
     , fem
+    , random
   default-language: Haskell2010
 
 test-suite fem-test
@@ -60,7 +63,6 @@ test-suite fem-test
   other-modules:
       DelaunaySpec
       DrawerSpec
-      GrahamSpec
       Paths_fem
   hs-source-dirs:
       test
