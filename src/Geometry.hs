@@ -3,7 +3,7 @@ module Geometry (
   Geometry(..),
 
   getGeometry,
-  getSuperTriangle,
+  getInitialTriangulation,
   getBorders,
   drawGeometry,
   geometry2nodes,
@@ -23,15 +23,29 @@ type Geometry = [Figure]
 -- !!! callback
 getGeometry :: Geometry
 getGeometry =
-  let n1 = 8
-      n2 = 5
-      nodes1 = [Node (1000 + 500 * cos(2 * pi * i / n1)) (1000 + 500 * sin(2 * pi * i / n1)) | i <- [1..n1-4]]
-      -- nodes2 = [Node (1000 + 300 * cos(2 * pi * i / n2)) (1000 + 300 * sin(2 * pi * i / n2)) | i <- [1..n2]]
-  in [Figure nodes1 True]
+  let n = 10
+      alpha = 2*pi/n
+      beta = alpha*0.7
+      gamma = alpha-beta
+      r1 = 500
+      r2 = 250
+      innerRound = [Node (1000+r2*cos(gamma*i/3)) (1000+r2*sin(gamma*i/3)) | i <- [1..2]]
+      outerRound = [Node (1000+r1*cos(beta*i/10)) (1000+r1*sin(beta*i/10)) | i <- [1..9]]
+      border1 = [Node (1000+r2+(r1-r2)*i/15) 1000 | i <- [0..15]]
+      border2 = reverse border1
+
+      step = map (rotate (-beta)) border1
+        ++ map (rotate (-beta)) outerRound
+        ++ border2
+        ++ innerRound
+
+      nodes1 = foldl (\acc value -> acc ++ map (rotate value) step) step [alpha*i | i <- [1..n-1]]
+      nodes2 = [Node (1000 + 150 * cos(2 * pi * i / 30)) (1000 + 150 * sin(2 * pi * i / 30)) | i <- [1..30]]
+  in [Figure nodes1 True, Figure nodes2 False]
 
 -- !!! callback
-getSuperTriangle :: Triangle
-getSuperTriangle = Triangle (Node 1000 (-500), Node (-500) 1700, Node 2500 1700)
+getInitialTriangulation :: [Triangle]
+getInitialTriangulation = [Triangle (Node 1000 (-500), Node (-500) 1700, Node 2500 1700)]
 
 -- !!! callback
 getBorders :: (Node, Node)
@@ -39,8 +53,9 @@ getBorders = (Node 500 500, Node 1500 1500)
 
 -- !!! callback
 drawGeometry :: Geometry -> Drawing PixelRGBA8 ()
-drawGeometry [figure1] = do
+drawGeometry [figure1, figure2] = do
   drawFigure figure1 5 (PixelRGBA8 0x00 0x00 0x00 255) (PixelRGBA8 0xDD 0xDD 0xDD 255) Solid
+  drawFigure figure2 5 (PixelRGBA8 0x00 0x00 0x00 255) (PixelRGBA8 0xFF 0xFF 0xFF 255) Solid
 
 geometry2nodes :: Geometry -> [Node]
 geometry2nodes [] = []
@@ -54,6 +69,14 @@ isFarFromAnyNode node ns geometry =
   null ([True | p <- ns ++ geometry2nodes geometry, distance p node < 20])
 
 -- private
+
+rotate :: Float -> Node -> Node
+rotate fi (Node x y) =
+  let sinA = sin fi
+      cosA = cos fi
+      x1 = x - 1000
+      y1 = y - 1000
+  in Node (1000 + x1*cosA-y1*sinA) (1000 + x1*sinA+y1*cosA)
 
 inFigure :: Node -> Figure -> Bool
 inFigure n0 (Figure n@(n1:_) inout) =

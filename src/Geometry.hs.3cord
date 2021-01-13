@@ -3,7 +3,7 @@ module Geometry (
   Geometry(..),
 
   getGeometry,
-  getSuperTriangle,
+  getInitialTriangulation,
   getBorders,
   drawGeometry,
   geometry2nodes,
@@ -30,8 +30,8 @@ getGeometry =
   in [Figure nodes1 True, Figure nodes2 False, Figure nodes3 False, Figure nodes4 False]
 
 -- !!! callback
-getSuperTriangle :: Triangle
-getSuperTriangle = Triangle (Node 1000 (-500), Node (-500) 1700, Node 2500 1700)
+getInitialTriangulation :: [Triangle]
+getInitialTriangulation = [Triangle (Node 1000 (-500), Node (-500) 1700, Node 2500 1700)]
 
 -- !!! callback
 getBorders :: (Node, Node)

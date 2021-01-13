@@ -3,7 +3,7 @@ module Geometry (
   Geometry(..),
 
   getGeometry,
-  getSuperTriangle,
+  getInitialTriangulation,
   getBorders,
   drawGeometry,
   geometry2nodes,
@@ -23,23 +23,18 @@ type Geometry = [Figure]
 -- !!! callback
 getGeometry :: Geometry
 getGeometry =
-  let nodes1 = [Node (spreadPoints 500 1500 i 50) 500 | i <- [0..50]]
-        ++ [Node 1500 (spreadPoints 500 1500 i 50) | i <- [1..49]]
-        ++ [Node (spreadPoints 1500 500 i 50) 1500 | i <- [0..50]]
-        ++ [Node 500 (spreadPoints 1500 500 i 50) | i <- [1..49]]
-      nodes2 = [Node (spreadPoints 700 900 i 10) 700 | i <- [0..10]]
-        ++ [Node 900 (spreadPoints 700 1300 i 30) | i <- [1..29]]
-        ++ [Node (spreadPoints 900 700 i 10) 1300 | i <- [0..10]]
-        ++ [Node 700 (spreadPoints 1300 700 i 30) | i <- [1..29]]
-      nodes3 = [Node (spreadPoints 1100 1300 i 10) 700 | i <- [0..10]]
-        ++ [Node 1300 (spreadPoints 700 1300 i 30) | i <- [1..29]]
-        ++ [Node (spreadPoints 1300 1100 i 10) 1300 | i <- [0..10]]
-        ++ [Node 1100 (spreadPoints 1300 700 i 30) | i <- [1..29]]
-  in [Figure nodes1 True, Figure nodes2 False, Figure nodes3 False]
+  let n1 = 100
+      n2 = 50
+      nodes1 = [Node (1000 + 500 * cos(2 * pi * i / n1)) (1000 + 500 * sin(2 * pi * i / n1)) | i <- [1..n1]]
+      nodes2 = [Node (1000 + 300 * cos(2 * pi * i / n2)) (1000 + 300 * sin(2 * pi * i / n2)) | i <- [1..n2]]
+  in [Figure nodes1 True, Figure nodes2 False]
 
 -- !!! callback
-getSuperTriangle :: Triangle
-getSuperTriangle = Triangle (Node 1000 (-500), Node (-500) 1700, Node 2500 1700)
+getInitialTriangulation :: [Triangle]
+getInitialTriangulation = [
+    Triangle (Node 400 400, Node 1600 400, Node 1600 1600),
+    Triangle (Node 400 400, Node 400 1600, Node 1600 1600)
+  ]
 
 -- !!! callback
 getBorders :: (Node, Node)
@@ -47,10 +42,9 @@ getBorders = (Node 500 500, Node 1500 1500)
 
 -- !!! callback
 drawGeometry :: Geometry -> Drawing PixelRGBA8 ()
-drawGeometry [figure1, figure2, figure3] = do
+drawGeometry [figure1, figure2] = do
   drawFigure figure1 5 (PixelRGBA8 0x00 0x00 0x00 255) (PixelRGBA8 0xDD 0xDD 0xDD 255) Solid
   drawFigure figure2 5 (PixelRGBA8 0x00 0x00 0x00 255) (PixelRGBA8 0xFF 0xFF 0xFF 255) Solid
-  drawFigure figure3 5 (PixelRGBA8 0x00 0x00 0x00 255) (PixelRGBA8 0xFF 0xFF 0xFF 255) Solid
 
 geometry2nodes :: Geometry -> [Node]
 geometry2nodes [] = []
@@ -61,7 +55,7 @@ isInGeometry n = foldl (\acc value -> acc && inFigure n value) True
 
 isFarFromAnyNode :: Node -> [Node] -> Geometry -> Bool
 isFarFromAnyNode node ns geometry =
-  null ([True | p <- ns ++ geometry2nodes geometry, distance p node < 20])
+  null ([True | p <- ns ++ geometry2nodes geometry, distance p node < 10])
 
 -- private
 
