@@ -7,6 +7,11 @@ module Triangle (
   nodes2Triangles,
   fromTriangles,
   getMedian,
+
+
+
+
+  isIntoAroundCircle,
 ) where
 
 import Node
@@ -50,7 +55,7 @@ isIntoAroundCircle (Node x y) (Triangle (Node ax ay, Node bx by, Node cx cy)) =
       p = (a + b + c) / 2
       r = a * b * c / (4 * sqrt (p * (p - a) * (p - b) * (p - c)))
       len = sqrt ((centerX - x) ^ 2 + (centerY - y) ^ 2)
-  in len < r
+  in len <= r
 
 fromTriangle :: Triangle -> (V2 Float, V2 Float, V2 Float)
 fromTriangle (Triangle (node1, node2, node3)) = (fromNode node1, fromNode node2, fromNode node3)
