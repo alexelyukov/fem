@@ -6,7 +6,7 @@ import { ElectromagneticFieldTransformerComponent } from './electromagnetic-fiel
 import { ElectrostaticFieldCordComponent } from './electrostatic-field-cord/electrostatic-field-cord.component';
 import { ElectrostaticFieldSkinComponent } from './electrostatic-field-skin/electrostatic-field-skin.component';
 import { ThermalFieldTubeComponent } from './thermal-field-tube/thermal-field-tube.component';
-import { ThermalFieldRectangleComponent } from './thermal_field_rectangle/thermal_field_rectangle.component';
+import { ThermalFieldRectangleComponent } from './thermal-field-rectangle/thermal-field-rectangle.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/thermal-field-rectangle', pathMatch: 'full' },

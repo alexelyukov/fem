@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "~11.0.9",
     "@angular/router": "~11.0.9",
     "@ng-bootstrap/ng-bootstrap": "^9.0.0",
+    "@types/pixi.js": "^5.0.0",
     "bootstrap": "^4.5.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
