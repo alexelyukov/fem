@@ -23,7 +23,3 @@ main = do
     drawGeometry geometry
     -- drawPoints (fromNodes $ geometry2nodes geometry) 3 (PixelRGBA8 0xFF 0x00 0x00 255)
     drawTriangulation triangulation 1 2 (PixelRGBA8 0x00 0x00 0x00 255) (PixelRGBA8 0xFF 0x00 0x00 255) Solid
-
-
--- TODO 1. проверка нахождения точки внутри невыпуклого многоугольника стреляющим лучом
--- TODO 2. подгонка границ при построении первичной триангуляции
