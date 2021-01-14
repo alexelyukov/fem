@@ -28,6 +28,7 @@ library:
   - Rasterific
   - JuicyPixels
   - random
+  - happstack-server
 
 executables:
   fem-exe:
@@ -42,6 +43,7 @@ executables:
     - Rasterific
     - JuicyPixels
     - random
+    - happstack-server
 
 tests:
   fem-test:
