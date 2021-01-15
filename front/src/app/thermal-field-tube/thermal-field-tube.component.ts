@@ -5,4 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './thermal-field-tube.component.html',
   styleUrls: ['./thermal-field-tube.component.sass']
 })
-export class ThermalFieldTubeComponent {}
+export class ThermalFieldTubeComponent {
+  public isTriangulationWaiting = false;
+  public isSolveWaiting = false;
+}

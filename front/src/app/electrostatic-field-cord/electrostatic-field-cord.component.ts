@@ -5,4 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './electrostatic-field-cord.component.html',
   styleUrls: ['./electrostatic-field-cord.component.sass']
 })
-export class ElectrostaticFieldCordComponent {}
+export class ElectrostaticFieldCordComponent {
+  public isTriangulationWaiting = false;
+  public isSolveWaiting = false;
+}

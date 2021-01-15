@@ -1,10 +1,25 @@
-<div class="container">
+<div class="container-fluid">    
     <div class="row">
-        <div class="col-10">
+        <div class="col-9">
             <electromagnetic-field-transformer-pixi></electromagnetic-field-transformer-pixi>
         </div>
-        <div class="col-2">
-            Электромагнитное поле трансформатора
+        <div class="col-3 mt-5">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" checked disabled>
+                <label class="form-check-label">Показать триангуляцию</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" disabled>
+                <label class="form-check-label">Показать диаграмму Вороного</label>
+            </div>
+            <button type="button" class="btn btn-primary btn-block mt-3">
+                <span *ngIf="isTriangulationWaiting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Триангуляция
+            </button>
+            <button type="button" class="btn btn-primary btn-block disabled">
+                <span *ngIf="isSolveWaiting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Решение
+            </button>
         </div>
     </div>
 </div>

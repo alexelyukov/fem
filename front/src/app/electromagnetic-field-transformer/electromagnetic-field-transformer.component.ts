@@ -5,4 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './electromagnetic-field-transformer.component.html',
   styleUrls: ['./electromagnetic-field-transformer.component.sass']
 })
-export class ElectromagneticFieldTransformerComponent {}
+export class ElectromagneticFieldTransformerComponent {
+  public isTriangulationWaiting = false;
+  public isSolveWaiting = false;
+}

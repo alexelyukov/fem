@@ -5,4 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './thermal-field-rectangle.component.html',
   styleUrls: ['./thermal-field-rectangle.component.sass']
 })
-export class ThermalFieldRectangleComponent {}
+export class ThermalFieldRectangleComponent {
+  public isTriangulationWaiting = false;
+  public isSolveWaiting = false;
+}

@@ -5,4 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './electrodynamic-system.component.html',
   styleUrls: ['./electrodynamic-system.component.sass']
 })
-export class ElectrodynamicSystemComponent {}
+export class ElectrodynamicSystemComponent {
+  public isTriangulationWaiting = false;
+  public isSolveWaiting = false;
+}

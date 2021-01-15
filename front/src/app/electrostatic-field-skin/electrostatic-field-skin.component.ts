@@ -5,4 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './electrostatic-field-skin.component.html',
   styleUrls: ['./electrostatic-field-skin.component.sass']
 })
-export class ElectrostaticFieldSkinComponent {}
+export class ElectrostaticFieldSkinComponent {
+  public isTriangulationWaiting = false;
+  public isSolveWaiting = false;
+}
