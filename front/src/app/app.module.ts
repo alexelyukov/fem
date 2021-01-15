@@ -11,7 +11,13 @@ import { ElectrostaticFieldCordComponent } from './electrostatic-field-cord/elec
 import { ElectromagneticFieldMagnetComponent } from './electromagnetic-field-magnet/electromagnetic-field-magnet.component';
 import { ElectromagneticFieldTransformerComponent } from './electromagnetic-field-transformer/electromagnetic-field-transformer.component';
 import { ElectrodynamicSystemComponent } from './electrodynamic-system/electrodynamic-system.component';
-import { PIXIComponent } from './thermal-field-rectangle/thermal-field-rectangle-pixi.component';
+import { ThermalFieldRectanglePixiComponent } from './thermal-field-rectangle/thermal-field-rectangle-pixi.component';
+import { ThermalFieldTubePixiComponent } from './thermal-field-tube/thermal-field-tube-pixi.component';
+import { ElectrostaticFieldSkinPixiComponent } from './electrostatic-field-skin/electrostatic-field-skin-pixi.component';
+import { ElectrostaticFieldCordPixiComponent } from './electrostatic-field-cord/electrostatic-field-cord-pixi.component';
+import { ElectromagneticFieldMagnetPixiComponent } from './electromagnetic-field-magnet/electromagnetic-field-magnet-pixi.component';
+import { ElectromagneticFieldTransformerPixiComponent } from './electromagnetic-field-transformer/electromagnetic-field-transformer-pixi.component';
+import { ElectrodynamicSystemPixiComponent } from './electrodynamic-system/electrodynamic-system-pixi.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +29,13 @@ import { PIXIComponent } from './thermal-field-rectangle/thermal-field-rectangle
     ElectrodynamicSystemComponent,
     ThermalFieldRectangleComponent,
     ThermalFieldTubeComponent,
-    PIXIComponent
+    ThermalFieldRectanglePixiComponent,
+    ThermalFieldTubePixiComponent,
+    ElectrostaticFieldSkinPixiComponent,
+    ElectrostaticFieldCordPixiComponent,
+    ElectromagneticFieldMagnetPixiComponent,
+    ElectromagneticFieldTransformerPixiComponent,
+    ElectrodynamicSystemPixiComponent,
   ],
   imports: [
     BrowserModule,

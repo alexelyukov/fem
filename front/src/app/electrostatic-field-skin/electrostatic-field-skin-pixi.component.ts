@@ -1,12 +1,12 @@
 import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy } from '@angular/core';
 import * as PIXI from 'pixi.js';
-import { drawPoints, drawPolygon, drawTest, Geometry, Rectangle, spreadPoints } from '../utils';
+import { Circle, drawPoints, drawPolygon, drawTest, Geometry, Point, spreadPoints } from '../utils';
 
 @Component({
-  selector: 'thermal-field-rectangle-pixi',
+  selector: 'electrostatic-field-skin-pixi',
   template: ''
 })
-export class ThermalFieldRectanglePixiComponent implements OnInit, OnDestroy {
+export class ElectrostaticFieldSkinPixiComponent implements OnInit, OnDestroy {
   public app: PIXI.Application;
   private geometry: Geometry;
 
@@ -24,23 +24,21 @@ export class ThermalFieldRectanglePixiComponent implements OnInit, OnDestroy {
     });
     this.elementRef.nativeElement.appendChild(this.app.view);
 
-    this.getGeometry({leftTop: {x: 100, y: 100}, rightBottom: {x: 700, y: 700}});
+    this.getGeometry({x: 400, y: 400, r: 300});
 
     this.drawGeometry();
 
   }
 
-  getGeometry(rectangle: Rectangle) {
-    const leftTop = rectangle.leftTop;
-    const rightBottom = rectangle.rightBottom;
+  getGeometry(circle: Circle) {
+    const n1 = 100;
 
-    let points =
-              [...Array(50+1).keys()].map((value) => ({x: spreadPoints(leftTop.x, rightBottom.x, value, 50), y: leftTop.y}))
-      .concat([...Array(50-1).keys()].map((value) => ({x: rightBottom.x, y: spreadPoints(leftTop.y, rightBottom.y, value + 1, 50)})))
-      .concat([...Array(50+1).keys()].map((value) => ({x: spreadPoints(rightBottom.x, leftTop.x, value, 50), y: rightBottom.y})))
-      .concat([...Array(50-1).keys()].map((value) => ({x: leftTop.x, y: spreadPoints(rightBottom.y, leftTop.y, value+1, 50)})));
+    let points = [...Array(n1).keys()].map((value) => ({
+      x: circle.x + circle.r * Math.cos(2 * Math.PI * (value+1) / n1),
+      y: circle.y + circle.r * Math.sin(2 * Math.PI * (value+1) / n1),
+    }));
 
-    this.geometry = [{points, inout: true}];
+    this.geometry = [{points: points, inout: true}];
   }
 
   drawGeometry() {

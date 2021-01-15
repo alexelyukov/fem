@@ -1,33 +1,39 @@
 import * as PIXI from 'pixi.js';
 
-interface Point {
+export interface Point {
     x: number;
     y: number;
 }
 
-interface Line {
+export interface Line {
     p1: Point;
     p2: Point;
 }
 
-interface Rectangle {
+export interface Rectangle {
     leftTop: Point;
     rightBottom: Point;
 }
 
-interface Circle {
+export interface Circle {
     x: number;
     y: number;
     r: number;
 }
 
-interface Triangle {
+export interface Triangle {
     p1: Point;
     p2: Point;
     p3: Point;
 }
 
-type Polygon = Point[];
+export type Polygon = Point[];
+export type Geometry = Figure[];
+
+export interface Figure {
+    points: Point[];
+    inout: boolean;
+}
 
 export function drawTest(app: PIXI.Application) {
     drawPoint(app, {x: 100, y: 100}, 1, 0x000000)
@@ -156,4 +162,8 @@ export function drawPoint(app: PIXI.Application, point: Point, size: number, col
     figure.x = point.x;
     figure.y = point.y;
     app.stage.addChild(figure);
+}
+
+export function spreadPoints(x1: number, x2: number, i: number, n: number): number {
+    return x1 + (x2 - x1) * (i / n);
 }

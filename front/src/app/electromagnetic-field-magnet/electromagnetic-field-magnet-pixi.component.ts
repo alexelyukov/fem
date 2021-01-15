@@ -1,12 +1,12 @@
 import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy } from '@angular/core';
 import * as PIXI from 'pixi.js';
-import { drawPoints, drawPolygon, drawTest, Geometry, Rectangle, spreadPoints } from '../utils';
+import { drawPoints, drawPolygon, drawTest, Geometry, Point, Rectangle, spreadPoints } from '../utils';
 
 @Component({
-  selector: 'thermal-field-rectangle-pixi',
+  selector: 'electromagnetic-field-magnet-pixi',
   template: ''
 })
-export class ThermalFieldRectanglePixiComponent implements OnInit, OnDestroy {
+export class ElectromagneticFieldMagnetPixiComponent implements OnInit, OnDestroy {
   public app: PIXI.Application;
   private geometry: Geometry;
 
@@ -24,7 +24,7 @@ export class ThermalFieldRectanglePixiComponent implements OnInit, OnDestroy {
     });
     this.elementRef.nativeElement.appendChild(this.app.view);
 
-    this.getGeometry({leftTop: {x: 100, y: 100}, rightBottom: {x: 700, y: 700}});
+    this.getGeometry({leftTop: {x: 300, y: 200}, rightBottom: {x: 500, y: 700}});
 
     this.drawGeometry();
 
@@ -35,10 +35,10 @@ export class ThermalFieldRectanglePixiComponent implements OnInit, OnDestroy {
     const rightBottom = rectangle.rightBottom;
 
     let points =
-              [...Array(50+1).keys()].map((value) => ({x: spreadPoints(leftTop.x, rightBottom.x, value, 50), y: leftTop.y}))
-      .concat([...Array(50-1).keys()].map((value) => ({x: rightBottom.x, y: spreadPoints(leftTop.y, rightBottom.y, value + 1, 50)})))
-      .concat([...Array(50+1).keys()].map((value) => ({x: spreadPoints(rightBottom.x, leftTop.x, value, 50), y: rightBottom.y})))
-      .concat([...Array(50-1).keys()].map((value) => ({x: leftTop.x, y: spreadPoints(rightBottom.y, leftTop.y, value+1, 50)})));
+              [...Array(15+1).keys()].map((value) => ({x: spreadPoints(leftTop.x, rightBottom.x, value, 15), y: leftTop.y}))
+      .concat([...Array(35-1).keys()].map((value) => ({x: rightBottom.x, y: spreadPoints(leftTop.y, rightBottom.y, value + 1, 35)})))
+      .concat([...Array(15+1).keys()].map((value) => ({x: spreadPoints(rightBottom.x, leftTop.x, value, 15), y: rightBottom.y})))
+      .concat([...Array(35-1).keys()].map((value) => ({x: leftTop.x, y: spreadPoints(rightBottom.y, leftTop.y, value+1, 35)})));
 
     this.geometry = [{points, inout: true}];
   }
