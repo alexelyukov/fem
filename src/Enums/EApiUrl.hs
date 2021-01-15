@@ -1,10 +1,21 @@
 module Enums.EApiUrl (
-  Urls (Controller1, Controller2),
+  Urls (..),
   getUrl
 ) where
 
-data Urls = Controller1 | Controller2 deriving (Show, Eq)
+data Urls = ThermalFieldRectangle
+  | ThermalFieldTube
+  | ElectrostaticFieldSkin
+  | ElectrostaticFieldCord
+  | ElectromagneticFieldMagnet
+  | ElectromagneticFieldTransformer
+  | ElectrodynamicSystem deriving (Show, Eq)
 
 getUrl :: Urls -> String
-getUrl Controller1 = "controller1"
-getUrl Controller2 = "controller2"
+getUrl ThermalFieldRectangle            = "thermal-field-rectangle"
+getUrl ThermalFieldTube                 = "thermal-field-tube"
+getUrl ElectrostaticFieldSkin           = "electrostatic-field-skin"
+getUrl ElectrostaticFieldCord           = "electrostatic-field-cord"
+getUrl ElectromagneticFieldMagnet       = "electromagnetic-field-magnet"
+getUrl ElectromagneticFieldTransformer  = "electromagnetic-field-transformer"
+getUrl ElectrodynamicSystem             = "electrodynamic-system"

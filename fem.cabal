@@ -26,8 +26,13 @@ source-repository head
 library
   exposed-modules:
       Config
-      Controllers.Controller1
-      Controllers.Controller2
+      Controllers.ElectrodynamicSystemController
+      Controllers.ElectromagneticFieldMagnetController
+      Controllers.ElectromagneticFieldTransformerController
+      Controllers.ElectrostaticFieldCordController
+      Controllers.ElectrostaticFieldSkinController
+      Controllers.ThermalFieldRectangleController
+      Controllers.ThermalFieldTubeController
       Delaunay
       Drawer
       Enums.EApiUrl

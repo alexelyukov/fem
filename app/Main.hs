@@ -1,23 +1,56 @@
 module Main where
 
 import Control.Monad (msum)
-import Happstack.Server (Method(GET, POST), look, dir, method, nullConf, ok, simpleHTTP)
-import qualified Config as C
-import qualified Enums.EApiUrl as U
-import qualified Controllers.Controller1 as C1
-import qualified Controllers.Controller2 as C2
+import Happstack.Server (defaultBodyPolicy, decodeBody, Method(GET, POST), look, dir, method, nullConf, ok, simpleHTTP)
+import qualified Enums.EApiUrl as EApiUrl
+import qualified Controllers.ThermalFieldRectangleController as ThermalFieldRectangleController
+import qualified Controllers.ThermalFieldTubeController as ThermalFieldTubeController
+import qualified Controllers.ElectrostaticFieldSkinController as ElectrostaticFieldSkinleController
+import qualified Controllers.ElectromagneticFieldMagnetController as ElectromagneticFieldMagnetController
+import qualified Controllers.ElectrostaticFieldCordController as ElectrostaticFieldCordController
+import qualified Controllers.ElectromagneticFieldMagnetController as ElectromagneticFieldTransformerController
+import qualified Controllers.ElectrodynamicSystemController as ElectrodynamicSystemController
+import Config
+import qualified Happstack.Server as Happstack.Server.Internal.MessageWrap
 
 main :: IO ()
-main = simpleHTTP C.serverConf $ msum
+main = simpleHTTP serverConf $ msum
   [
-    dir (U.getUrl U.Controller1) $ do method GET
-                                      a <- look "a"
-                                      b <- look "b"
-                                      ok $ C1.resultController (read a :: Int) (read b :: Int),
-    dir (U.getUrl U.Controller2) $ do method POST
-                                      a <- look "a"
-                                      b <- look "b"
-                                      ok $ C2.resultController (read a :: Int) (read b :: Int)
+    dir (EApiUrl.getUrl EApiUrl.ThermalFieldRectangle) $
+      do method POST
+         decodeBody (defaultBodyPolicy "." 0 65536 65536)
+         geometry <- look "geometry"
+         ok $ ThermalFieldRectangleController.handler (read geometry :: Int),
+    dir (EApiUrl.getUrl EApiUrl.ThermalFieldTube) $
+      do method POST
+         decodeBody (defaultBodyPolicy "." 0 65536 65536)
+         geometry <- look "geometry"
+         ok $ ThermalFieldTubeController.handler (read geometry :: Int),
+    dir (EApiUrl.getUrl EApiUrl.ElectrostaticFieldSkin) $
+      do method POST
+         decodeBody (defaultBodyPolicy "." 0 65536 65536)
+         geometry <- look "geometry"
+         ok $ ElectrostaticFieldSkinleController.handler (read geometry :: Int),
+    dir (EApiUrl.getUrl EApiUrl.ElectrostaticFieldCord) $
+      do method POST
+         decodeBody (defaultBodyPolicy "." 0 65536 65536)
+         geometry <- look "geometry"
+         ok $ ElectrostaticFieldCordController.handler (read geometry :: Int),
+    dir (EApiUrl.getUrl EApiUrl.ElectromagneticFieldMagnet) $
+      do method POST
+         decodeBody (defaultBodyPolicy "." 0 65536 65536)
+         geometry <- look "geometry"
+         ok $ ElectromagneticFieldMagnetController.handler (read geometry :: Int),
+    dir (EApiUrl.getUrl EApiUrl.ElectromagneticFieldTransformer) $
+      do method POST
+         decodeBody (defaultBodyPolicy "." 0 65536 65536)
+         geometry <- look "geometry"
+         ok $ ElectromagneticFieldTransformerController.handler (read geometry :: Int),
+    dir (EApiUrl.getUrl EApiUrl.ElectrodynamicSystem) $
+      do method POST
+         decodeBody (defaultBodyPolicy "." 0 65536 65536)
+         geometry <- look "geometry"
+         ok $ ElectrodynamicSystemController.handler (read geometry :: Int)
   ]
 
 
