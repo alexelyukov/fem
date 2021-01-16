@@ -63,7 +63,6 @@ export class ThermalFieldRectangleComponent {
   }
 
   clear() {
-    console.log(111);
     this.triangulation = null;
     this.voronoi = null;
 
@@ -75,7 +74,6 @@ export class ThermalFieldRectangleComponent {
   }
 
   change() {
-    
     this.canvas.clearAll();
 
     if (this.showTriangulation) {
