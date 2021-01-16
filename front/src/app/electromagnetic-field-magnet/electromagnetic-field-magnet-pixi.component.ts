@@ -1,4 +1,4 @@
-import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy } from '@angular/core';
+import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy, Output, EventEmitter } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { drawPoints, drawPolygon, drawTest, Geometry, Point, Rectangle, spreadPoints } from '../utils';
 
@@ -16,6 +16,8 @@ export class ElectromagneticFieldMagnetPixiComponent implements OnInit, OnDestro
   @Input()
   public applicationOptions: {} = { width: 900, height: 900, backgroundColor: 0xFFFFFF };
 
+  @Output() notify: EventEmitter<Geometry> = new EventEmitter<Geometry>();
+
   constructor(private elementRef: ElementRef, private ngZone: NgZone) {}
 
   init() {
@@ -25,6 +27,8 @@ export class ElectromagneticFieldMagnetPixiComponent implements OnInit, OnDestro
     this.elementRef.nativeElement.appendChild(this.app.view);
 
     this.getGeometry({leftTop: {x: 300, y: 200}, rightBottom: {x: 500, y: 700}});
+
+    this.notify.emit(this.geometry);
 
     this.drawGeometry();
 
@@ -40,7 +44,7 @@ export class ElectromagneticFieldMagnetPixiComponent implements OnInit, OnDestro
       .concat([...Array(15+1).keys()].map((value) => ({x: spreadPoints(rightBottom.x, leftTop.x, value, 15), y: rightBottom.y})))
       .concat([...Array(35-1).keys()].map((value) => ({x: leftTop.x, y: spreadPoints(rightBottom.y, leftTop.y, value+1, 35)})));
 
-    this.geometry = [{points, inout: true}];
+    this.geometry = [{points, io: true}];
   }
 
   drawGeometry() {

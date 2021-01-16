@@ -16,23 +16,24 @@ export interface Rectangle {
 }
 
 export interface Circle {
-    x: number;
-    y: number;
+    p: Point;
     r: number;
 }
 
 export interface Triangle {
-    p1: Point;
-    p2: Point;
-    p3: Point;
+    a: Point;
+    b: Point;
+    c: Point;
 }
 
 export type Polygon = Point[];
 export type Geometry = Figure[];
+export type Triangulation = Triangle[];
+export type Voronoi = Polygon[];
 
 export interface Figure {
     points: Point[];
-    inout: boolean;
+    io: boolean;
 }
 
 export function drawTest(app: PIXI.Application) {
@@ -59,17 +60,17 @@ export function drawTest(app: PIXI.Application) {
     drawRectangle(app, {leftTop: {x: 400, y: 250}, rightBottom: {x: 450, y: 300}}, 1, 0x000000, 0xCCCCCC)
     drawPoints(app, [{x: 400, y: 250}, {x: 450, y: 250}, {x: 450, y: 300}, {x: 400, y: 300}], 2.5, 0xFF0000)
 
-    drawCircle(app, {x: 125, y: 350, r: 25}, 1, 0x000000)
-    drawCircle(app, {x: 225, y: 350, r: 25}, 1, 0x000000, 0xCCCCCC)
+    drawCircle(app, {p: {x: 125, y: 350}, r: 25}, 1, 0x000000)
+    drawCircle(app, {p: {x: 225, y: 350}, r: 25}, 1, 0x000000, 0xCCCCCC)
 
-    drawCircle(app, {x: 325, y: 350, r: 25}, 1, 0x000000)
+    drawCircle(app, {p: {x: 325, y: 350}, r: 25}, 1, 0x000000)
     drawPoint(app, {x: 325, y: 350}, 2.5, 0xFF0000)
 
-    drawCircle(app, {x: 425, y: 350, r: 25}, 1, 0x000000, 0xCCCCCC)
+    drawCircle(app, {p: {x: 425, y: 350}, r: 25}, 1, 0x000000, 0xCCCCCC)
     drawPoint(app, {x: 425, y: 350}, 2.5, 0xFF0000)
 
-    drawTriangle(app, {p1: {x: 100, y: 425}, p2: {x: 150, y: 425}, p3: {x: 125, y: 450}}, 1, 0x000000)
-    drawTriangle(app, {p1: {x: 225, y: 425}, p2: {x: 200, y: 450}, p3: {x: 250, y: 450}}, 1, 0x000000, 0xCCCCCC)
+    drawTriangle(app, {a: {x: 100, y: 425}, b: {x: 150, y: 425}, c: {x: 125, y: 450}}, 1, 0x000000)
+    drawTriangle(app, {a: {x: 225, y: 425}, b: {x: 200, y: 450}, c: {x: 250, y: 450}}, 1, 0x000000, 0xCCCCCC)
 
     drawPolygon(app, [{x: 100, y: 525}, {x: 125, y: 475}, {x: 150, y: 525}, {x: 125, y: 550}], 1, 0x000000, 0xCCCCCC)
 }
@@ -81,7 +82,7 @@ export function drawTriangles(app: PIXI.Application, triangles: Triangle[], size
 }
 
 export function drawTriangle(app: PIXI.Application, triangle: Triangle, size: number, colorBorder: number , colorFill?: number) {
-    drawPolygon(app, [triangle.p1, triangle.p2, triangle.p3], size, colorBorder , colorFill);
+    drawPolygon(app, [triangle.a, triangle.b, triangle.c], size, colorBorder , colorFill);
 }
 
 export function drawPolygons(app: PIXI.Application, polygons: Polygon[], size: number, colorBorder: number , colorFill?: number) {
@@ -113,7 +114,7 @@ export function drawCircle(app: PIXI.Application, circle: Circle, size: number, 
     if (colorFill) {
         figure.beginFill(colorFill);
     }
-    figure.drawCircle(circle.x, circle.y, circle.r);
+    figure.drawCircle(circle.p.x, circle.p.y, circle.r);
     figure.endFill();
     app.stage.addChild(figure);
 }

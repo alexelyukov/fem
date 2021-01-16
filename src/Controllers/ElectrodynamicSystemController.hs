@@ -3,8 +3,10 @@ module Controllers.ElectrodynamicSystemController (
   url
 ) where
 
-handler :: Int -> String
-handler a = "result"
+import Types
+
+handler :: Geometry -> String
+handler geometry = show geometry
 
 url :: String
 url = "electrodynamic-system-triangulation"

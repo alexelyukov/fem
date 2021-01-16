@@ -1,4 +1,4 @@
-import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy } from '@angular/core';
+import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy, Output, EventEmitter } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { Circle, drawPoints, drawPolygon, drawTest, Geometry, Point, spreadPoints } from '../utils';
 
@@ -16,6 +16,8 @@ export class ThermalFieldTubePixiComponent implements OnInit, OnDestroy {
   @Input()
   public applicationOptions: {} = { width: 900, height: 900, backgroundColor: 0xFFFFFF };
 
+  @Output() notify: EventEmitter<Geometry> = new EventEmitter<Geometry>();
+
   constructor(private elementRef: ElementRef, private ngZone: NgZone) {}
 
   init() {
@@ -24,7 +26,9 @@ export class ThermalFieldTubePixiComponent implements OnInit, OnDestroy {
     });
     this.elementRef.nativeElement.appendChild(this.app.view);
 
-    this.getGeometry({x: 400, y: 400, r: 300}, {x: 400, y: 400, r: 150});
+    this.getGeometry({p: {x: 400, y: 400}, r: 300}, {p: {x: 400, y: 400}, r: 150});
+
+    this.notify.emit(this.geometry);
 
     this.drawGeometry();
 
@@ -35,16 +39,16 @@ export class ThermalFieldTubePixiComponent implements OnInit, OnDestroy {
     const n2 = 50;
 
     let points1 = [...Array(n1).keys()].map((value) => ({
-      x: circle1.x + circle1.r * Math.cos(2 * Math.PI * (value+1) / n1),
-      y: circle1.y + circle1.r * Math.sin(2 * Math.PI * (value+1) / n1),
+      x: circle1.p.x + circle1.r * Math.cos(2 * Math.PI * (value+1) / n1),
+      y: circle1.p.y + circle1.r * Math.sin(2 * Math.PI * (value+1) / n1),
     }));
 
     let points2 = [...Array(n2).keys()].map((value) => ({
-      x: circle2.x + circle2.r * Math.cos(2 * Math.PI * (value+1) / n2),
-      y: circle2.y + circle2.r * Math.sin(2 * Math.PI * (value+1) / n2),
+      x: circle2.p.x + circle2.r * Math.cos(2 * Math.PI * (value+1) / n2),
+      y: circle2.p.y + circle2.r * Math.sin(2 * Math.PI * (value+1) / n2),
     }));
 
-    this.geometry = [{points: points1, inout: true}, {points: points2, inout: false}];
+    this.geometry = [{points: points1, io: true}, {points: points2, io: false}];
   }
 
   drawGeometry() {

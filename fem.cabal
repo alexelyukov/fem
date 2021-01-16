@@ -39,6 +39,7 @@ library
       Geometry
       Node
       Triangle
+      Types
   other-modules:
       Paths_fem
   hs-source-dirs:
@@ -46,6 +47,7 @@ library
   build-depends:
       JuicyPixels
     , Rasterific
+    , aeson
     , base >=4.7 && <5
     , happstack-server
     , random
@@ -61,6 +63,7 @@ executable fem-exe
   build-depends:
       JuicyPixels
     , Rasterific
+    , aeson
     , base >=4.7 && <5
     , fem
     , happstack-server

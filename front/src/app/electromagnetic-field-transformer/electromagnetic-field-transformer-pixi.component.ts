@@ -1,4 +1,4 @@
-import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy } from '@angular/core';
+import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy, EventEmitter, Output } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { drawPoints, drawPolygon, drawTest, Geometry, Point, Rectangle, spreadPoints } from '../utils';
 
@@ -16,6 +16,8 @@ export class ElectromagneticFieldTransformerPixiComponent implements OnInit, OnD
   @Input()
   public applicationOptions: {} = { width: 900, height: 900, backgroundColor: 0xFFFFFF };
 
+  @Output() notify: EventEmitter<Geometry> = new EventEmitter<Geometry>();
+
   constructor(private elementRef: ElementRef, private ngZone: NgZone) {}
 
   init() {
@@ -29,6 +31,8 @@ export class ElectromagneticFieldTransformerPixiComponent implements OnInit, OnD
       {leftTop: {x: 150, y: 200}, rightBottom: {x: 350, y: 500}},
       {leftTop: {x: 450, y: 200}, rightBottom: {x: 650, y: 500}},
     );
+
+    this.notify.emit(this.geometry);
 
     this.drawGeometry();
 
@@ -63,9 +67,9 @@ export class ElectromagneticFieldTransformerPixiComponent implements OnInit, OnD
       .concat([...Array(25-1).keys()].map((value) => ({x: leftTop3.x, y: spreadPoints(rightBottom3.y, leftTop3.y, value+1, 25)})));
 
     this.geometry = [
-      {points: points1, inout: true},
-      {points: points2, inout: false},
-      {points: points3, inout: false}
+      {points: points1, io: true},
+      {points: points2, io: false},
+      {points: points3, io: false}
     ];
   }
 

@@ -1,4 +1,4 @@
-import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy } from '@angular/core';
+import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy, Output, EventEmitter } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { concat } from 'rxjs';
 import { drawPoints, drawPolygon, drawTest, Geometry, Point, spreadPoints } from '../utils';
@@ -17,6 +17,8 @@ export class ElectrodynamicSystemPixiComponent implements OnInit, OnDestroy {
   @Input()
   public applicationOptions: {} = { width: 900, height: 900, backgroundColor: 0xFFFFFF };
 
+  @Output() notify: EventEmitter<Geometry> = new EventEmitter<Geometry>();
+
   constructor(private elementRef: ElementRef, private ngZone: NgZone) {}
 
   init() {
@@ -26,6 +28,8 @@ export class ElectrodynamicSystemPixiComponent implements OnInit, OnDestroy {
     this.elementRef.nativeElement.appendChild(this.app.view);
 
     this.getGeometry();
+
+    this.notify.emit(this.geometry);
 
     this.drawGeometry();
 
@@ -67,7 +71,7 @@ export class ElectrodynamicSystemPixiComponent implements OnInit, OnDestroy {
       y: c.y + 100 * Math.sin(2 * Math.PI * (value+1) / 50),
     }));
 
-    this.geometry = [{points: points1, inout: true}, {points: points2, inout: false}];
+    this.geometry = [{points: points1, io: true}, {points: points2, io: false}];
   }
 
   drawGeometry() {

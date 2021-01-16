@@ -3,8 +3,10 @@ module Controllers.ThermalFieldTubeController (
   url
 ) where
 
-handler :: Int -> String
-handler a = "result"
+import Types
+
+handler :: Geometry -> String
+handler geometry = show geometry
 
 url :: String
 url = "thermal-field-tube-triangulation"

@@ -20,6 +20,7 @@ import { ElectromagneticFieldMagnetPixiComponent } from './electromagnetic-field
 import { ElectromagneticFieldTransformerPixiComponent } from './electromagnetic-field-transformer/electromagnetic-field-transformer-pixi.component';
 import { ElectrodynamicSystemPixiComponent } from './electrodynamic-system/electrodynamic-system-pixi.component';
 import { ApiService } from './api.service';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { ApiService } from './api.service';
     AppRoutingModule,
     NgbModule,
     HttpClientModule,
+    FormsModule,
   ],
   providers: [
     ApiService,

@@ -1,4 +1,4 @@
-import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy } from '@angular/core';
+import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy, Output, EventEmitter } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { Circle, drawPoints, drawPolygon, drawTest, Geometry, Point, spreadPoints } from '../utils';
 
@@ -16,6 +16,8 @@ export class ElectrostaticFieldSkinPixiComponent implements OnInit, OnDestroy {
   @Input()
   public applicationOptions: {} = { width: 900, height: 900, backgroundColor: 0xFFFFFF };
 
+  @Output() notify: EventEmitter<Geometry> = new EventEmitter<Geometry>();
+
   constructor(private elementRef: ElementRef, private ngZone: NgZone) {}
 
   init() {
@@ -24,7 +26,9 @@ export class ElectrostaticFieldSkinPixiComponent implements OnInit, OnDestroy {
     });
     this.elementRef.nativeElement.appendChild(this.app.view);
 
-    this.getGeometry({x: 400, y: 400, r: 300});
+    this.getGeometry({p: {x: 400, y: 400}, r: 300});
+
+    this.notify.emit(this.geometry);
 
     this.drawGeometry();
 
@@ -34,11 +38,11 @@ export class ElectrostaticFieldSkinPixiComponent implements OnInit, OnDestroy {
     const n1 = 100;
 
     let points = [...Array(n1).keys()].map((value) => ({
-      x: circle.x + circle.r * Math.cos(2 * Math.PI * (value+1) / n1),
-      y: circle.y + circle.r * Math.sin(2 * Math.PI * (value+1) / n1),
+      x: circle.p.x + circle.r * Math.cos(2 * Math.PI * (value+1) / n1),
+      y: circle.p.y + circle.r * Math.sin(2 * Math.PI * (value+1) / n1),
     }));
 
-    this.geometry = [{points: points, inout: true}];
+    this.geometry = [{points: points, io: true}];
   }
 
   drawGeometry() {

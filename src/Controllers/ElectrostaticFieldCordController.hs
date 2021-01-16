@@ -3,8 +3,10 @@ module Controllers.ElectrostaticFieldCordController (
   url
 ) where
 
-handler :: Int -> String
-handler a = "result"
+import Types
+
+handler :: Geometry -> String
+handler geometry = show geometry
 
 url :: String
 url = "electrostatic-field-cord-triangulation"

@@ -27,6 +27,7 @@ library:
   dependencies:
   - Rasterific
   - JuicyPixels
+  - aeson
   - random
   - happstack-server
 
@@ -42,6 +43,7 @@ executables:
     - fem
     - Rasterific
     - JuicyPixels
+    - aeson
     - random
     - happstack-server
 

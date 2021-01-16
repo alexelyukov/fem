@@ -1,4 +1,4 @@
-import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy } from '@angular/core';
+import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy, EventEmitter, Output } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { Circle, drawPoints, drawPolygon, drawTest, Geometry, Point, spreadPoints } from '../utils';
 
@@ -16,6 +16,8 @@ export class ElectrostaticFieldCordPixiComponent implements OnInit, OnDestroy {
   @Input()
   public applicationOptions: {} = { width: 900, height: 900, backgroundColor: 0xFFFFFF };
 
+  @Output() notify: EventEmitter<Geometry> = new EventEmitter<Geometry>();
+
   constructor(private elementRef: ElementRef, private ngZone: NgZone) {}
 
   init() {
@@ -25,11 +27,13 @@ export class ElectrostaticFieldCordPixiComponent implements OnInit, OnDestroy {
     this.elementRef.nativeElement.appendChild(this.app.view);
 
     this.getGeometry(
-      {x: 400, y: 400, r: 300},
-      {x: 400 + 0.5*300*Math.cos(Math.PI/2), y: 400 - 0.5*300*Math.sin(Math.PI/2), r: 70},
-      {x: 400 - 0.5*300*Math.cos(Math.PI/6), y: 400 + 0.5*300*Math.sin(Math.PI/6), r: 70},
-      {x: 400 + 0.5*300*Math.cos(Math.PI/6), y: 400 + 0.5*300*Math.sin(Math.PI/6), r: 70}
+      {p: {x: 400, y: 400}, r: 300},
+      {p: {x: 400 + 0.5*300*Math.cos(Math.PI/2), y: 400 - 0.5*300*Math.sin(Math.PI/2)}, r: 70},
+      {p: {x: 400 - 0.5*300*Math.cos(Math.PI/6), y: 400 + 0.5*300*Math.sin(Math.PI/6)}, r: 70},
+      {p: {x: 400 + 0.5*300*Math.cos(Math.PI/6), y: 400 + 0.5*300*Math.sin(Math.PI/6)}, r: 70}
     );
+
+    this.notify.emit(this.geometry);
 
     this.drawGeometry();
   }
@@ -39,30 +43,30 @@ export class ElectrostaticFieldCordPixiComponent implements OnInit, OnDestroy {
     const n2 = 25;
 
     let points1 = [...Array(n1).keys()].map((value) => ({
-      x: circle1.x + circle1.r * Math.cos(2 * Math.PI * (value+1) / n1),
-      y: circle1.y + circle1.r * Math.sin(2 * Math.PI * (value+1) / n1),
+      x: circle1.p.x + circle1.r * Math.cos(2 * Math.PI * (value+1) / n1),
+      y: circle1.p.y + circle1.r * Math.sin(2 * Math.PI * (value+1) / n1),
     }));
 
     let points2 = [...Array(n2).keys()].map((value) => ({
-      x: circle2.x + circle2.r * Math.cos(2 * Math.PI * (value+1) / n2),
-      y: circle2.y + circle2.r * Math.sin(2 * Math.PI * (value+1) / n2),
+      x: circle2.p.x + circle2.r * Math.cos(2 * Math.PI * (value+1) / n2),
+      y: circle2.p.y + circle2.r * Math.sin(2 * Math.PI * (value+1) / n2),
     }));
 
     let points3 = [...Array(n2).keys()].map((value) => ({
-      x: circle3.x + circle3.r * Math.cos(2 * Math.PI * (value+1) / n2),
-      y: circle3.y + circle3.r * Math.sin(2 * Math.PI * (value+1) / n2),
+      x: circle3.p.x + circle3.r * Math.cos(2 * Math.PI * (value+1) / n2),
+      y: circle3.p.y + circle3.r * Math.sin(2 * Math.PI * (value+1) / n2),
     }));
 
     let points4 = [...Array(n2).keys()].map((value) => ({
-      x: circle4.x + circle4.r * Math.cos(2 * Math.PI * (value+1) / n2),
-      y: circle4.y + circle4.r * Math.sin(2 * Math.PI * (value+1) / n2),
+      x: circle4.p.x + circle4.r * Math.cos(2 * Math.PI * (value+1) / n2),
+      y: circle4.p.y + circle4.r * Math.sin(2 * Math.PI * (value+1) / n2),
     }));
 
     this.geometry = [
-      {points: points1, inout: true},
-      {points: points2, inout: false},
-      {points: points3, inout: false},
-      {points: points4, inout: false}
+      {points: points1, io: true},
+      {points: points2, io: false},
+      {points: points3, io: false},
+      {points: points4, io: false}
     ];
   }
 

@@ -1,6 +1,6 @@
-import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy } from '@angular/core';
+import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy, Output, EventEmitter } from '@angular/core';
 import * as PIXI from 'pixi.js';
-import { drawPoints, drawPolygon, drawTest, Geometry, Rectangle, spreadPoints } from '../utils';
+import { drawPoints, drawPolygon, drawPolygons, drawTriangles, Geometry, Rectangle, spreadPoints, Triangulation, Voronoi } from '../utils';
 
 @Component({
   selector: 'thermal-field-rectangle-pixi',
@@ -16,6 +16,8 @@ export class ThermalFieldRectanglePixiComponent implements OnInit, OnDestroy {
   @Input()
   public applicationOptions: {} = { width: 900, height: 900, backgroundColor: 0xFFFFFF };
 
+  @Output() notify: EventEmitter<Geometry> = new EventEmitter<Geometry>();
+
   constructor(private elementRef: ElementRef, private ngZone: NgZone) {}
 
   init() {
@@ -25,6 +27,8 @@ export class ThermalFieldRectanglePixiComponent implements OnInit, OnDestroy {
     this.elementRef.nativeElement.appendChild(this.app.view);
 
     this.getGeometry({leftTop: {x: 100, y: 100}, rightBottom: {x: 700, y: 700}});
+
+    this.notify.emit(this.geometry);
 
     this.drawGeometry();
 
@@ -40,7 +44,7 @@ export class ThermalFieldRectanglePixiComponent implements OnInit, OnDestroy {
       .concat([...Array(50+1).keys()].map((value) => ({x: spreadPoints(rightBottom.x, leftTop.x, value, 50), y: rightBottom.y})))
       .concat([...Array(50-1).keys()].map((value) => ({x: leftTop.x, y: spreadPoints(rightBottom.y, leftTop.y, value+1, 50)})));
 
-    this.geometry = [{points, inout: true}];
+    this.geometry = [{points, io: true}];
   }
 
   drawGeometry() {
@@ -55,10 +59,35 @@ export class ThermalFieldRectanglePixiComponent implements OnInit, OnDestroy {
   }
 
   destroy() {
-    this.app.destroy();
+    while (this.app.stage.children[0]) {
+      this.app.stage.removeChild(this.app.stage.children[0]);
+    }
+
+    this.app.destroy(true);
+    this.app = null;
   }
 
   ngOnDestroy(): void {
     this.destroy();
   }
+
+  clearAll() {
+    this.destroy();
+
+    this.ngZone.runOutsideAngular(() => {
+      this.app = new PIXI.Application(this.applicationOptions);
+    });
+    this.elementRef.nativeElement.appendChild(this.app.view);
+
+    this.drawGeometry();
+  }
+
+  drawTriangulation(triangulation: Triangulation) {
+    drawTriangles(this.app, triangulation, 1, 0x000000);
+  }
+
+  drawVoronoi(voronoi: Voronoi) {
+    drawPolygons(this.app, voronoi, 1, 0x000000, 0xFFFFFF);
+  }
+  
 }
