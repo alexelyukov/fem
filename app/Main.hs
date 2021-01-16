@@ -1,8 +1,7 @@
 module Main where
 
 import Control.Monad (msum)
-import Happstack.Server (defaultBodyPolicy, decodeBody, Method(GET, POST), look, dir, method, nullConf, ok, simpleHTTP)
-import qualified Enums.EApiUrl as EApiUrl
+import Happstack.Server (addHeader, setHeader, Response, Response, WebMonad(finishWith), result, ToMessage(toResponse), ServerPartT, defaultBodyPolicy, decodeBody, Method(OPTIONS, GET, POST), look, dir, method, nullConf, ok, simpleHTTP)
 import qualified Controllers.ThermalFieldRectangleController as ThermalFieldRectangleController
 import qualified Controllers.ThermalFieldTubeController as ThermalFieldTubeController
 import qualified Controllers.ElectrostaticFieldSkinController as ElectrostaticFieldSkinleController
@@ -11,48 +10,34 @@ import qualified Controllers.ElectrostaticFieldCordController as ElectrostaticFi
 import qualified Controllers.ElectromagneticFieldMagnetController as ElectromagneticFieldTransformerController
 import qualified Controllers.ElectrodynamicSystemController as ElectrodynamicSystemController
 import Config
-import qualified Happstack.Server as Happstack.Server.Internal.MessageWrap
 
 main :: IO ()
-main = simpleHTTP serverConf $ msum
-  [
-    dir (EApiUrl.getUrl EApiUrl.ThermalFieldRectangle) $
-      do method POST
-         decodeBody (defaultBodyPolicy "." 0 65536 65536)
-         geometry <- look "geometry"
-         ok $ ThermalFieldRectangleController.handler (read geometry :: Int),
-    dir (EApiUrl.getUrl EApiUrl.ThermalFieldTube) $
-      do method POST
-         decodeBody (defaultBodyPolicy "." 0 65536 65536)
-         geometry <- look "geometry"
-         ok $ ThermalFieldTubeController.handler (read geometry :: Int),
-    dir (EApiUrl.getUrl EApiUrl.ElectrostaticFieldSkin) $
-      do method POST
-         decodeBody (defaultBodyPolicy "." 0 65536 65536)
-         geometry <- look "geometry"
-         ok $ ElectrostaticFieldSkinleController.handler (read geometry :: Int),
-    dir (EApiUrl.getUrl EApiUrl.ElectrostaticFieldCord) $
-      do method POST
-         decodeBody (defaultBodyPolicy "." 0 65536 65536)
-         geometry <- look "geometry"
-         ok $ ElectrostaticFieldCordController.handler (read geometry :: Int),
-    dir (EApiUrl.getUrl EApiUrl.ElectromagneticFieldMagnet) $
-      do method POST
-         decodeBody (defaultBodyPolicy "." 0 65536 65536)
-         geometry <- look "geometry"
-         ok $ ElectromagneticFieldMagnetController.handler (read geometry :: Int),
-    dir (EApiUrl.getUrl EApiUrl.ElectromagneticFieldTransformer) $
-      do method POST
-         decodeBody (defaultBodyPolicy "." 0 65536 65536)
-         geometry <- look "geometry"
-         ok $ ElectromagneticFieldTransformerController.handler (read geometry :: Int),
-    dir (EApiUrl.getUrl EApiUrl.ElectrodynamicSystem) $
-      do method POST
-         decodeBody (defaultBodyPolicy "." 0 65536 65536)
-         geometry <- look "geometry"
-         ok $ ElectrodynamicSystemController.handler (read geometry :: Int)
-  ]
+main = simpleHTTP serverConf $ msum $
+        getRoute ThermalFieldRectangleController.url ThermalFieldRectangleController.handler
+    ++  getRoute ThermalFieldTubeController.url ThermalFieldTubeController.handler
+    ++  getRoute ElectrostaticFieldSkinleController.url ElectrostaticFieldSkinleController.handler
+    ++  getRoute ElectrostaticFieldCordController.url ElectrostaticFieldCordController.handler
+    ++  getRoute ElectromagneticFieldMagnetController.url ElectromagneticFieldMagnetController.handler
+    ++  getRoute ElectromagneticFieldTransformerController.url ElectromagneticFieldTransformerController.handler
+    ++  getRoute ElectrodynamicSystemController.url ElectrodynamicSystemController.handler
 
+getRoute :: String -> (Int -> String) -> [ServerPartT IO String]
+getRoute url handler = [
+    dir url $
+    do  method POST
+        -- decodeBody (defaultBodyPolicy "." 0 65536 65536 )
+        -- geometry <- look "geometry"
+        finishWith $ addHeaders $ result 200 $ handler 12,
+    dir url $
+    do  method OPTIONS
+        finishWith $ addHeaders $ result 200 "OK"
+    ]
+
+addHeaders :: Response -> Response
+addHeaders =  addHeader "Access-Control-Allow-Origin" "*"
+            . addHeader "Access-Control-Allow-Methods" "*"
+            . addHeader "Access-Control-Allow-Headers" "*"
+            . addHeader "Content-Type" "text/html; charset=utf-8"
 
 -- module Main where
 

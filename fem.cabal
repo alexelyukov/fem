@@ -35,7 +35,6 @@ library
       Controllers.ThermalFieldTubeController
       Delaunay
       Drawer
-      Enums.EApiUrl
       Generator
       Geometry
       Node

@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,6 +19,7 @@ import { ElectrostaticFieldCordPixiComponent } from './electrostatic-field-cord/
 import { ElectromagneticFieldMagnetPixiComponent } from './electromagnetic-field-magnet/electromagnetic-field-magnet-pixi.component';
 import { ElectromagneticFieldTransformerPixiComponent } from './electromagnetic-field-transformer/electromagnetic-field-transformer-pixi.component';
 import { ElectrodynamicSystemPixiComponent } from './electrodynamic-system/electrodynamic-system-pixi.component';
+import { ApiService } from './api.service';
 
 @NgModule({
   declarations: [
@@ -40,9 +42,12 @@ import { ElectrodynamicSystemPixiComponent } from './electrodynamic-system/elect
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgbModule
+    NgbModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    ApiService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
