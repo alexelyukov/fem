@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Geometry, Triangulation, Voronoi } from '../utils';
+import { ElectrodynamicSystemPixiComponent } from './electrodynamic-system-pixi.component';
 
 @Component({
   selector: 'electrodynamic-system',
@@ -8,12 +9,22 @@ import { Geometry, Triangulation, Voronoi } from '../utils';
   styleUrls: ['./electrodynamic-system.component.sass']
 })
 export class ElectrodynamicSystemComponent {
+  public triangulation: Triangulation = null;
+  public voronoi: Voronoi = null
+
   public isTriangulationWaiting = false;
   public isSolveWaiting = false;
+  public isActiveTriangulationBtn = true;
+  public isActiveSolveBtn = false;
+  public isActiveClearBtn = false;
+
+  public showTriangulation = true;
+  public showVoronoi = false;
 
   private geometry: Geometry = null;
-  private triangulation: Triangulation = null;
-  private voronoi: Voronoi = null
+
+  @ViewChild(ElectrodynamicSystemPixiComponent, {static: false})
+  private canvas: ElectrodynamicSystemPixiComponent;
 
   constructor(private apiService: ApiService) { }
 
@@ -26,6 +37,13 @@ export class ElectrodynamicSystemComponent {
 
           this.triangulation = parsedData.triangulation;
           this.voronoi = parsedData.voronoi;
+          this.isActiveSolveBtn = true;
+          this.isActiveClearBtn = true;
+          this.isActiveTriangulationBtn = false;
+
+          this.canvas.drawTriangulation(this.triangulation);
+
+          console.log(this.triangulation, this.voronoi);
 
           this.isTriangulationWaiting = false;
         },
@@ -38,5 +56,35 @@ export class ElectrodynamicSystemComponent {
 
   onNotify(geometry: Geometry) {
     this.geometry = geometry;
+  }
+
+  solve() {
+    console.log("Запрос на решение");
+  }
+
+  clear() {
+    this.triangulation = null;
+    this.voronoi = null;
+
+    this.canvas.clearAll();
+
+    this.isActiveSolveBtn = false;
+    this.isActiveClearBtn = false;
+    this.isActiveTriangulationBtn = true;
+
+    this.showTriangulation = true;
+    this.showVoronoi = false;
+  }
+
+  change() {
+    this.canvas.clearAll();
+
+    if (this.showTriangulation) {
+      this.canvas.drawTriangulation(this.triangulation);
+    }
+
+    if (this.showVoronoi) {
+      this.canvas.drawVoronoi(this.voronoi);
+    }
   }
 }

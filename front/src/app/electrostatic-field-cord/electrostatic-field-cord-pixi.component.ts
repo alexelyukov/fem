@@ -1,6 +1,6 @@
 import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy, EventEmitter, Output } from '@angular/core';
 import * as PIXI from 'pixi.js';
-import { Circle, drawPoints, drawPolygon, drawTest, Geometry, Point, spreadPoints } from '../utils';
+import { Circle, drawPoints, drawPolygon, drawPolygons, drawTest, drawTriangles, Geometry, Point, spreadPoints, Triangulation, Voronoi } from '../utils';
 
 @Component({
   selector: 'electrostatic-field-cord-pixi',
@@ -94,10 +94,34 @@ export class ElectrostaticFieldCordPixiComponent implements OnInit, OnDestroy {
   }
 
   destroy() {
-    this.app.destroy();
+    while (this.app.stage.children[0]) {
+      this.app.stage.removeChild(this.app.stage.children[0]);
+    }
+
+    this.app.destroy(true);
+    this.app = null;
   }
 
   ngOnDestroy(): void {
     this.destroy();
+  }
+
+  clearAll() {
+    this.destroy();
+
+    this.ngZone.runOutsideAngular(() => {
+      this.app = new PIXI.Application(this.applicationOptions);
+    });
+    this.elementRef.nativeElement.appendChild(this.app.view);
+
+    this.drawGeometry();
+  }
+
+  drawTriangulation(triangulation: Triangulation) {
+    drawTriangles(this.app, triangulation, 1, 0x000000);
+  }
+
+  drawVoronoi(voronoi: Voronoi) {
+    drawPolygons(this.app, voronoi, 1, 0x000000, 0xFFFFFF);
   }
 }

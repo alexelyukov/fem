@@ -71,6 +71,9 @@ export class ThermalFieldRectangleComponent {
     this.isActiveSolveBtn = false;
     this.isActiveClearBtn = false;
     this.isActiveTriangulationBtn = true;
+
+    this.showTriangulation = true;
+    this.showVoronoi = false;
   }
 
   change() {
