@@ -1,7 +1,7 @@
 import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy, Output, EventEmitter } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { concat } from 'rxjs';
-import { drawPoints, drawPolygon, drawPolygons, drawTest, drawTriangles, Geometry, Point, spreadPoints, Triangulation, Voronoi } from '../utils';
+import { drawPoints, drawPolygon, drawPolygons, drawTest, drawTriangles, Geometry, getTriangulationPoints, getVoronoiPoints, Point, spreadPoints, Triangulation, Voronoi } from '../utils';
 
 @Component({
   selector: 'electrodynamic-system-pixi',
@@ -115,10 +115,12 @@ export class ElectrodynamicSystemPixiComponent implements OnInit, OnDestroy {
 
   drawTriangulation(triangulation: Triangulation) {
     drawTriangles(this.app, triangulation, 1, 0x000000);
+    drawPoints(this.app, getTriangulationPoints(triangulation), 2.5, 0xFF0000);
   }
 
   drawVoronoi(voronoi: Voronoi) {
-    drawPolygons(this.app, voronoi, 1, 0x000000, 0xFFFFFF);
+    drawPolygons(this.app, voronoi, 1, 0x000000);
+    drawPoints(this.app, getVoronoiPoints(voronoi), 2.5, 0xFF0000);
   }
 
   rotate(fi: number, point: Point, c: Point) {

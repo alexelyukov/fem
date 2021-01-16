@@ -168,3 +168,21 @@ export function drawPoint(app: PIXI.Application, point: Point, size: number, col
 export function spreadPoints(x1: number, x2: number, i: number, n: number): number {
     return x1 + (x2 - x1) * (i / n);
 }
+
+export function getVoronoiPoints(polygons: Voronoi) {
+    let res: Point[] = [];
+    for (const polygon of polygons) {
+        res = res.concat(polygon);
+    }
+
+    return res;
+}
+
+export function getTriangulationPoints(triangulation: Triangulation) {
+    let res: Point[] = [];
+    for (const triangle of triangulation) {
+        res = res.concat([triangle.a, triangle.b, triangle.c]);
+    }
+
+    return res;
+}

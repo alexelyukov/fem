@@ -43,7 +43,7 @@ export class ElectrostaticFieldCordComponent {
 
           this.canvas.drawTriangulation(this.triangulation);
 
-          console.log(this.triangulation, this.voronoi);
+          console.log("Response: ", this.triangulation, this.voronoi);
 
           this.isTriangulationWaiting = false;
         },
