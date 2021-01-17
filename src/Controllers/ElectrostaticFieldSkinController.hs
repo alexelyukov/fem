@@ -21,7 +21,7 @@ getTriangulation :: Geometry -> Triangulation
 getTriangulation geometry =
   let generator = mkStdGen 10
       (generatedPoints, generator') = generatePoints generator geometry 3000
-      triangulationTest = map (createTriangle Line { p1 = Point { x = 0, y = 0 }, p2 = Point { x = 0, y = 0 } }) generatedPoints
+      triangulationTest = map (\p -> createTriangle Line { p1 = p, p2 = p } p) generatedPoints
   -- in [Triangle { a = Point { x = 200, y = 200 }, b = Point { x = 200, y = 300 }, c = Point { x = 300, y = 250 }}]
   in triangulationTest
 
