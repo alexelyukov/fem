@@ -9,6 +9,7 @@ import System.Random
 import Generator
 import Geometry
 import Delaunay
+import Debug.Trace
 
 handler :: Geometry -> String
 handler geometry =
@@ -22,12 +23,18 @@ url = "electrostatic-field-skin-triangulation"
 getTriangulation :: Geometry -> Triangulation
 getTriangulation geometry =
   let generator = mkStdGen 10
-      (generatedPoints, generator') = generatePoints generator geometry 300
+      (generatedPoints, generator') = generatePoints generator geometry 3000
       borderPoints = geometry2points geometry
-      -- triangulationTest = map (\p -> createTriangle Line { p1 = p, p2 = p } p) generatedPoints
-      triangulation = run (getInitialTriangulation geometry) borderPoints
-  -- in [Triangle { a = Point { x = 200, y = 200 }, b = Point { x = 200, y = 300 }, c = Point { x = 300, y = 250 }}]
-  in triangulation
+      initialTriangulation = getInitialTriangulation geometry
+      Triangle { a = a0, b = b0, c = c0 } = head initialTriangulation
+      triangulation = run initialTriangulation (generatedPoints ++ borderPoints)
+      cleanTriangulation = filter (\Triangle { a = a, b = b, c = c } ->
+                                      (a `notElem` [a0, b0, c0])
+                                    && (b `notElem` [a0, b0, c0])
+                                    && (c `notElem` [a0, b0, c0])
+                                  ) triangulation
+      -- success = check cleanTriangulation
+  in cleanTriangulation
 
 getVoronoi :: Geometry -> Voronoi
 getVoronoi geometry = [[Point { x = 500, y = 500 }, Point { x = 500, y = 600 }, Point { x = 600, y = 550 }]]

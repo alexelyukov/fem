@@ -35,9 +35,9 @@ export class ElectrostaticFieldSkinPixiComponent implements OnInit, OnDestroy {
   }
 
   getGeometry(circle: Circle) {
-    const n1 = 7;
+    const n1 = 100;
 
-    let points = [...Array(n1-1).keys()].map((value) => ({
+    let points = [...Array(n1).keys()].map((value) => ({
       x: circle.p.x + circle.r * Math.cos(2 * Math.PI * (value+1) / n1),
       y: circle.p.y + circle.r * Math.sin(2 * Math.PI * (value+1) / n1),
     }));

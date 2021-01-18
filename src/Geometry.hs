@@ -5,11 +5,11 @@ module Geometry (
     inGeometry,
     isFarFromAnyPoint,
     distance,
-    createTriangle,
     getInitialTriangulation,
     getAroundRectangle,
     getAroundCircle,
     getBadTriangles,
+    getBadTriangles',
     polarAngleSort,
 ) where
 
@@ -114,8 +114,21 @@ getInitialTriangulation geometry =
         c = Point { x = x0 - r0 * sqrt 3, y = y0 + r0 }
     }]
 
-getBadTriangles :: Point -> [Triangle] -> [Triangle]
-getBadTriangles point = filter (intoAroundCircle point)
+getBadTriangles :: Point -> [Triangle] -> ([Triangle], Bool)
+getBadTriangles point@Point { x = x0, y = y0 } = foldl (\(acc1, acc2) t ->
+        (if intoAroundCircle point t then t:acc1 else acc1, acc2)
+    ) ([], True)
+
+getBadTriangles' :: Point -> [Triangle] -> ([Triangle], Bool)
+getBadTriangles' point@Point { x = x0, y = y0 } = foldl (\(acc1, acc2) t ->
+        let v0 = intoAroundCircle point t
+            v1 = intoAroundCircle Point { x = x0 + 1e-3, y = y0 } t
+            v2 = intoAroundCircle Point { x = x0 - 1e-3, y = y0 } t
+            v3 = intoAroundCircle Point { x = x0, y = y0 + 1e-3 } t
+            v4 = intoAroundCircle Point { x = x0, y = y0 - 1e-3 } t
+            goodPoint = v0 == v1 && v1 == v2 && v2 == v3 && v3 == v4
+        in (if v0 then t:acc1 else acc1, acc2 && goodPoint)
+    ) ([], True)
 
 intoAroundCircle :: Point -> Triangle -> Bool
 intoAroundCircle Point { x = x, y = y } Triangle { a = Point { x = ax, y = ay }, b = Point { x = bx, y = by }, c = Point { x = cx, y = cy } } =
@@ -147,7 +160,3 @@ getAbsoluteAngle Point { x = x1, y = y1 } Point { x = x2, y = y2 }
   | x == 0 && y < 0 = 3 * pi / 2
   where x = x2 - x1
         y = y2 - y1
-
--- временные функции
-createTriangle :: Line -> Point -> Triangle
-createTriangle Line { p1 = b, p2 = c } a = Triangle { a = a, b = b, c = c}
