@@ -7,6 +7,7 @@ import Types
 import Data.Aeson
 import System.Random
 import Generator
+import Geometry
 
 handler :: Geometry -> String
 handler geometry =

@@ -34,11 +34,8 @@ library
       Controllers.ThermalFieldRectangleController
       Controllers.ThermalFieldTubeController
       Delaunay
-      Drawer
       Generator
       Geometry
-      Node
-      Triangle
       Types
   other-modules:
       Paths_fem
