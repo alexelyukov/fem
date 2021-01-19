@@ -22,16 +22,31 @@ url = "electromagnetic-field-magnet-triangulation"
 getTriangulation :: Geometry -> Triangulation
 getTriangulation geometry =
   let generator = mkStdGen 10
-      (generatedPoints, generator') = generatePoints generator geometry 3000
+      border = getAroundRectangle geometry
       borderPoints = geometry2points geometry
+      (generatedPoints, generator') = generatePoints generator geometry 3000
       initialTriangulation = getInitialTriangulation geometry
       Triangle { a = a0, b = b0, c = c0 } = head initialTriangulation
       triangulation = run initialTriangulation (generatedPoints ++ borderPoints)
-      cleanTriangulation = filter (\Triangle { a = a, b = b, c = c } ->
-                                      (a `notElem` [a0, b0, c0])
-                                    && (b `notElem` [a0, b0, c0])
-                                    && (c `notElem` [a0, b0, c0])
-                                  ) triangulation
+      (cleanTriangulation, generator'') = foldl (\(acc, generator) t@Triangle { a = a, b = b, c = c } ->
+          let cond1 = (a `notElem` [a0, b0, c0]) && (b `notElem` [a0, b0, c0]) && (c `notElem` [a0, b0, c0])
+              (condA, generator1) = inGeometry (generateBeamPoint border) generator a geometry
+              (condB, generator2) = inGeometry (generateBeamPoint border) generator1 b geometry
+              (condC, generator3) = inGeometry (generateBeamPoint border) generator2 c geometry
+              Point {x = x1, y = y1 } = a
+              Point {x = x2, y = y2 } = b
+              Point {x = x3, y = y3 } = c
+              mediana = Point { x = (x1 + x2 + x3) / 3, y = (y1 + y2 + y3) / 3}
+              (cond2, generator4) = inGeometry (generateBeamPoint border) generator3 mediana geometry
+          in case () of {
+            _ | not cond1 -> (acc, generator)
+              | not condA -> (acc, generator1)
+              | not condB -> (acc, generator2)
+              | not condC -> (acc, generator3)
+              | not cond2 -> (acc, generator4)
+              | otherwise -> (t:acc, generator4)
+          }
+        ) ([], generator') triangulation
       -- success = check cleanTriangulation
   in cleanTriangulation
 

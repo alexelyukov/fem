@@ -38,11 +38,9 @@ checkPoint Triangle { a = Point { x = x1, y = y1 }, b = Point { x = x2, y = y2 }
 
 addPoint :: Triangulation -> Point -> Triangulation
 addPoint triangulation point =
-  let (badTriangles, goodPoint) = getBadTriangles' point triangulation
+  let badTriangles = getBadTriangles point triangulation
       badNodes = nub $ triangles2points badTriangles
       cleanTriangles = filter (`notElem` badTriangles) triangulation
       poligon@(h:_) = polarAngleSort point badNodes
       newTriangles = points2triangles point (poligon ++ [h])
-  in if goodPoint
-     then newTriangles ++ cleanTriangles
-     else triangulation
+  in newTriangles ++ cleanTriangles

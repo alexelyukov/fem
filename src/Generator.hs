@@ -1,5 +1,6 @@
 module Generator (
   generatePoints,
+  generateBeamPoint,
 ) where
 
 import System.Random
@@ -23,10 +24,9 @@ generatePoint (points, generator) border geometry =
       (y0, generator'') = random generator'
       Rectangle { leftTop = Point { x = minX, y = minY }, rightBottom = Point { x = maxX, y = maxY } } = border
       point = Point { x = minX + x0 * (maxX - minX), y = minY + y0 * (maxY - minY) }
-      (isInGeometry, generator''') = inGeometry (generateBeamPoint border) generator'' point geometry
-  in  if isInGeometry && isFarFromAnyPoint point points geometry
-      then (Just point, generator''')
-      else (Nothing, generator''')
+  in  if isFarFromAnyPoint point points geometry
+      then (Just point, generator'')
+      else (Nothing, generator'')
 
 generateBeamPoint :: Rectangle -> StdGen -> (Point, StdGen)
 generateBeamPoint rectangle generator = 

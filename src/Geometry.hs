@@ -9,13 +9,13 @@ module Geometry (
     getAroundRectangle,
     getAroundCircle,
     getBadTriangles,
-    getBadTriangles',
     polarAngleSort,
 ) where
 
 import Types
 import System.Random
 import Data.List
+import Debug.Trace
 
 distance :: Point -> Point -> Float
 distance Point { x = x1, y = y1 } Point { x = x2, y = y2 } = sqrt ((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
@@ -55,22 +55,30 @@ inGeometry fn generator point = foldl (
 
 inFigure :: (StdGen -> (Point, StdGen)) -> StdGen -> Point -> Figure -> (Bool, StdGen)
 inFigure fn generator point Figure { points = polygon, io = io } =
-    let (isInPolygon, generator') = inPolygon fn generator point polygon
-    in if io then (isInPolygon, generator') else (not isInPolygon, generator')
+    let isPointTheSame = point `elem` polygon
+        (isInPolygon, generator') = inPolygon fn generator point polygon
+    in if isPointTheSame
+       then (True, generator)
+       else if io then (isInPolygon, generator') else (not isInPolygon, generator')
 
 inPolygon :: (StdGen -> (Point, StdGen)) -> StdGen -> Point -> Polygon -> (Bool, StdGen)
 inPolygon fn generator point polygon =
     let (generatedPoint, generator') = fn generator
         line = Line { p1 = generatedPoint, p2 = point }
-        intersection = polygonIntersect line polygon
+        lines = polygon2lines polygon
+        isOnLine = onLines point lines
+        intersection = polygonIntersect line lines
     in  case intersection of {
         (_, False) -> inPolygon fn generator' point polygon;
         (intersectionCount, _) -> (odd intersectionCount, generator')
     }
 
-polygonIntersect :: Line -> Polygon -> (Int, Bool)
-polygonIntersect line polygon =
-    let combinations = map (linesIntersect line) (polygon2lines polygon)
+onLines :: Point -> [Line] -> Bool
+onLines = http://algolist.ru/maths/geom/belong/otr2d.php
+
+polygonIntersect :: Line -> [Line] -> (Int, Bool)
+polygonIntersect line lines =
+    let combinations = map (linesIntersect line) lines
         isGoodPoint = not (any (`elem` [TheSame, OnEdge]) combinations)
         intersectionCount = length (filter (== Intersect) combinations)
     in (intersectionCount, isGoodPoint)
@@ -97,7 +105,7 @@ getAroundRectangle geometry =
       Point { y = minY } = minimumBy (\Point { y = y1 } Point { y = y2 } -> compare y1 y2) points
       Point { x = maxX } = maximumBy (\Point { x = x1 } Point { x = x2 } -> compare x1 x2) points
       Point { y = maxY } = maximumBy (\Point { y = y1 } Point { y = y2 } -> compare y1 y2) points
-  in Rectangle { leftTop = Point { x = minX, y = minY }, rightBottom = Point { x = maxX, y = maxY } }
+  in Rectangle { leftTop = Point { x = minX - 20, y = minY - 20 }, rightBottom = Point { x = maxX + 20, y = maxY + 20 } }
 
 getAroundCircle :: Rectangle -> Circle
 getAroundCircle Rectangle { leftTop = p1@Point { x = minX, y = minY }, rightBottom = p2@Point { x = maxX, y = maxY } } = 
@@ -114,21 +122,8 @@ getInitialTriangulation geometry =
         c = Point { x = x0 - r0 * sqrt 3, y = y0 + r0 }
     }]
 
-getBadTriangles :: Point -> [Triangle] -> ([Triangle], Bool)
-getBadTriangles point@Point { x = x0, y = y0 } = foldl (\(acc1, acc2) t ->
-        (if intoAroundCircle point t then t:acc1 else acc1, acc2)
-    ) ([], True)
-
-getBadTriangles' :: Point -> [Triangle] -> ([Triangle], Bool)
-getBadTriangles' point@Point { x = x0, y = y0 } = foldl (\(acc1, acc2) t ->
-        let v0 = intoAroundCircle point t
-            v1 = intoAroundCircle Point { x = x0 + 1e-3, y = y0 } t
-            v2 = intoAroundCircle Point { x = x0 - 1e-3, y = y0 } t
-            v3 = intoAroundCircle Point { x = x0, y = y0 + 1e-3 } t
-            v4 = intoAroundCircle Point { x = x0, y = y0 - 1e-3 } t
-            goodPoint = v0 == v1 && v1 == v2 && v2 == v3 && v3 == v4
-        in (if v0 then t:acc1 else acc1, acc2 && goodPoint)
-    ) ([], True)
+getBadTriangles :: Point -> [Triangle] -> [Triangle]
+getBadTriangles point = filter (intoAroundCircle point)
 
 intoAroundCircle :: Point -> Triangle -> Bool
 intoAroundCircle Point { x = x, y = y } Triangle { a = Point { x = ax, y = ay }, b = Point { x = bx, y = by }, c = Point { x = cx, y = cy } } =
