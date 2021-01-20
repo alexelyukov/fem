@@ -1,6 +1,6 @@
 import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy, EventEmitter, Output } from '@angular/core';
 import * as PIXI from 'pixi.js';
-import { drawPoints, drawPolygon, drawPolygons, drawTest, drawTriangles, Geometry, getTriangulationPoints, getVoronoiPoints, Point, Rectangle, spreadPoints, Triangulation, Voronoi } from '../utils';
+import { drawPoint, drawPoints, drawPolygon, drawPolygons, drawTest, drawTriangles, Geometry, getTriangulationPoints, getVoronoiPoints, Point, Rectangle, spreadPoints, Triangulation, Voronoi } from '../utils';
 
 @Component({
   selector: 'electromagnetic-field-transformer-pixi',
@@ -35,7 +35,6 @@ export class ElectromagneticFieldTransformerPixiComponent implements OnInit, OnD
     this.notify.emit(this.geometry);
 
     this.drawGeometry();
-
   }
 
   getGeometry(rectangle1: Rectangle, rectangle2: Rectangle, rectangle3: Rectangle) {

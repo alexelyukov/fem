@@ -10,6 +10,7 @@ module Geometry (
     getAroundCircle,
     getBadTriangles,
     polarAngleSort,
+    intoAroundCircle,
 ) where
 
 import Types
@@ -55,26 +56,34 @@ inGeometry fn generator point = foldl (
 
 inFigure :: (StdGen -> (Point, StdGen)) -> StdGen -> Point -> Figure -> (Bool, StdGen)
 inFigure fn generator point Figure { points = polygon, io = io } =
-    let isPointTheSame = point `elem` polygon
-        (isInPolygon, generator') = inPolygon fn generator point polygon
-    in if isPointTheSame
-       then (True, generator)
-       else if io then (isInPolygon, generator') else (not isInPolygon, generator')
+    let lines = polygon2lines polygon
+        isOnLine = onLines point lines
+        (isInPolygon, generator') = inPolygon fn generator point lines
+    in  if isOnLine
+        then (True, generator)
+        else if io then (isInPolygon, generator') else (not isInPolygon, generator')
 
-inPolygon :: (StdGen -> (Point, StdGen)) -> StdGen -> Point -> Polygon -> (Bool, StdGen)
-inPolygon fn generator point polygon =
+inPolygon :: (StdGen -> (Point, StdGen)) -> StdGen -> Point -> [Line] -> (Bool, StdGen)
+inPolygon fn generator point lines =
     let (generatedPoint, generator') = fn generator
         line = Line { p1 = generatedPoint, p2 = point }
-        lines = polygon2lines polygon
-        isOnLine = onLines point lines
         intersection = polygonIntersect line lines
     in  case intersection of {
-        (_, False) -> inPolygon fn generator' point polygon;
+        (_, False) -> inPolygon fn generator' point lines;
         (intersectionCount, _) -> (odd intersectionCount, generator')
     }
 
 onLines :: Point -> [Line] -> Bool
-onLines = http://algolist.ru/maths/geom/belong/otr2d.php
+onLines point = foldl (\acc line -> acc || onLine point line) False
+
+onLine :: Point -> Line -> Bool
+onLine Point { x = x, y = y } Line { p1 = Point { x = x1, y = y1 }, p2 = Point { x = x2, y = y2 } } =
+    let p = (x - x2) / (x1 - x2)
+    in case () of {
+        _ | x1 == x2 -> x1 == x && ((y >= y1 && y <= y2) || (y >= y2 && y <= y1))
+          | y1 == y2 -> y1 == y && ((x >= x1 && x <= x2) || (x >= x2 && x <= x1))
+          | otherwise -> (p * y1 + (1 - p) * y2 == y) && p >= 0 && p <= 1
+    }
 
 polygonIntersect :: Line -> [Line] -> (Int, Bool)
 polygonIntersect line lines =
@@ -85,8 +94,8 @@ polygonIntersect line lines =
 
 linesIntersect :: Line -> Line -> LineCombination
 linesIntersect
-    Line { p1 = Point { x = x1, y = y1 }, p2 = Point { x = x2, y = y2 } }
-    Line { p1 = Point { x = x3, y = y3 }, p2 = Point { x = x4, y = y4 } } =
+    line1@Line { p1 = Point { x = x1, y = y1 }, p2 = Point { x = x2, y = y2 } }
+    line2@Line { p1 = Point { x = x3, y = y3 }, p2 = Point { x = x4, y = y4 } } =
         let d = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1)
             a = (x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)
             b = (x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)
@@ -94,7 +103,8 @@ linesIntersect
             _ | d == 0 && (a == 0 || b == 0) -> TheSame
               | d == 0 -> Parallel
               | a / d > 0 && a / d < 1 && b / d > 0 && b / d < 1 -> Intersect
-              | a / d == 0 || a / d == 1 || b / d == 0 || b / d == 1 -> OnEdge
+              | ((a / d == 0 || a / d == 1) && b / d > 0 && b / d < 1)
+                    || ((b / d == 0 || b / d == 1) && a / d > 0 && a / d < 1) -> OnEdge
               | otherwise -> NotIntersect
         }
 

@@ -1,6 +1,6 @@
 import { OnInit, Component, ElementRef, Input, NgZone, OnDestroy, Output, EventEmitter } from '@angular/core';
 import * as PIXI from 'pixi.js';
-import { drawPoints, drawPolygon, drawPolygons, drawTriangles, Geometry, getTriangulationPoints, getVoronoiPoints, Rectangle, spreadPoints, Triangulation, Voronoi } from '../utils';
+import { drawPoint, drawPoints, drawPolygon, drawPolygons, drawTriangle, drawTriangles, Geometry, getTriangulationPoints, getVoronoiPoints, Rectangle, spreadPoints, Triangulation, Voronoi } from '../utils';
 
 @Component({
   selector: 'thermal-field-rectangle-pixi',
